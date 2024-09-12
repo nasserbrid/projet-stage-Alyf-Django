@@ -1,0 +1,6 @@
+.vscode/ 
+node_modules/
+*.pyc
+.env
+C:\Users\iggdu\ProjetAlyf\projet-stage-Alyf-Django\projet-stage-Alyf-Django\demo_alyf\data\alyf_master_data.xlsm
+
