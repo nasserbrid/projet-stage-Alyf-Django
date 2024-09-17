@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.affichercalendrier, name='affichercalendrier'),
-    path('getmodule/', views.get_dicomodule, name='getdicomodule')
+    path('getmodule/', views.get_dicomodule, name='get_dicomodule')
 ]

@@ -15,20 +15,23 @@ load_dotenv()
 
 
 class ExcelFile:
-    EXCEL = win32com.client.Dispatch("Excel.Application")
+#     EXCEL = win32com.client.Dispatch("Excel.Application")
    # EXCEL.DisplayAlerts = False attempting to overwrite without notification
     def __init__(self, workbook= None , worksheet= None, macro = None):
+        self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
         self.macro = macro
+       
+        
         
 
     def open_worksheet(self, sheetName):
            
            # self.EXCEL.Visible = True 
-            ExcelFile.EXCEL.Visible = False
-           # if self.EXCEL.Visible == True :
-            if ExcelFile.EXCEL.Visible == False:
+            self.excel.Visible = True
+           # if self.EXCEL.Visible == True :s
+            if self.excel.Visible == True:
                    print("excel is visible")
                   
                                 
@@ -36,7 +39,7 @@ class ExcelFile:
                                           
                        # self.workbook = self.EXCEL.Workbooks.Open("C:\\Users\\nasse\\projet-stage-Alyf\\Test-fichier-excel\\alyfData.xlsm")
                        
-                        self.workbook = ExcelFile.EXCEL.Workbooks.Open(os.getenv("ALYFMASTERPATH"))
+                        self.workbook = self.excel.Workbooks.Open(os.getenv("ALYFMASTERPATH"))
                         #print(self.workbook)
                 
                         self.worksheet = self.workbook.Sheets(sheetName)
@@ -48,14 +51,14 @@ class ExcelFile:
                          print("Le fichier Excel est introuvable.")
                          
                         # self.EXCEL.Quit()
-                         ExcelFile.EXCEL.Quit()
+                         self.excel.Quit()
 
                          exit(1)
                    except Exception as e:
                         print('La feuille "DEV WEB" est introuvable:', e)
                         self.workbook.Close(SaveChanges=False)
                         #self.EXCEL.Quit()
-                        ExcelFile.EXCEL.Quit()
+                        self.excel.Quit()
                         exit(1)
 
                     
@@ -73,7 +76,7 @@ class ExcelFile:
           #self.EXCEL.Quit()
        
 
-          ExcelFile.EXCEL.Quit()
+          self.excel.Quit()
           
           
     #Définir une méthode qui permet d'utiliser le dataframe et qui va récupérer des sessions dans "DEV WEB"
@@ -307,16 +310,23 @@ class ExcelFile:
                     
      
     def find_session_type(self, session_name):
-        
+            
 
-        if session_name.find("ALT") != -1 :
-            return "Sessions Alternantes"
-        elif session_name.find("HORS CURSUS") != -1:
-            return "Hors Cursus - Atos Générique"
-        elif session_name.find("Isitech" or "XEFI") !=-1:
-            return "Isitech - XEFI"
-        else :
-            return "Sessions Continues"
+    # Define a dictionary with keywords as keys and corresponding session names as values
+      keywords = {
+        "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],
+        "Sessions Alternantes": ["ALT", "alt"],
+        "Hors Cursus - Atos Générique": ["HC", "HORS CURSUS", "hors cursus", "horscursus", "ATOS", "atos", "ATOS GENERIQUE"]
+     }
+ 
+    # Check if any keyword from the lists is in the input string
+      for key, values in keywords.items():
+           if any(value in session_name for value in values):
+             return key
+ 
+    # Default return value if no match is found
+      return "Sessions Continues"
+ 
         
      
     def get_session_dataframe(self, sheetName, sessionName): 
@@ -373,7 +383,11 @@ class ExcelFile:
   
         #   print(df.columns)
           unique_units = df[0].unique()
+          print(f"unique_units : {unique_units}")
+          
+         
           unique_units = list(filter(len, unique_units))
+          print(unique_units)
         #   print(type(unique_units))
        
           #unique_units.remove("FERIE")
@@ -384,8 +398,10 @@ class ExcelFile:
 
           #il faut filtrer certains termes dont férié
 
-        
-      
+       
+          if module_name not in unique_units:
+             print(f"Erreur: {module_name} n'est pas dans unique_units.")
+             return [], []
           
                 
           index_current_module  = unique_units.index(module_name)

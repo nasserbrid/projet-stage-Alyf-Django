@@ -56,7 +56,7 @@ ROOT_URLCONF = 'demo_alyf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:\\Users\\iggdu\\ProjetAlyf\\projet-stage-Alyf-Django\\projet-stage-Alyf-Django\\demo_alyf\\staticresssources\\templates\\gestion_planning_alyf'],
+        'DIRS': ['C:\\Users\\nasse\\projet-stage-Alyf-Django\\demo_alyf\\staticresssources\\templates\\gestion_planning_alyf'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

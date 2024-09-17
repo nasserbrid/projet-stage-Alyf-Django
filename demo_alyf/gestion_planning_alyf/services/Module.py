@@ -15,8 +15,8 @@ class Module:
     def __init__(self, nom_module, date_debut, date_fin,  session, modules_termines, modules_a_venir):
          self.__id_module = uuid.uuid4()
          self.__nom_module = nom_module
-         self.__date_debut = datetime.strptime(str(date_debut),'%Y-%m-%d')
-         self.__date_fin = datetime.strptime(str(date_fin),'%Y-%m-%d')
+         self.__date_debut = datetime.strptime(str(date_debut),'%Y-%m-%d %H:%M:%S')
+         self.__date_fin = datetime.strptime(str(date_fin),'%Y-%m-%d %H:%M:%S')
          self.__session = session
          self.__modules_termines = modules_termines
          self.__modules_a_venir = modules_a_venir
@@ -177,8 +177,8 @@ class Module:
 
            while date_debut <= date_fin:
     # add current date to list by converting  it to iso format
-              dates.append(date_debut.isoformat())
-        #       dates.append(date_debut.strftime('%Y-%m-%d'))
+        #       dates.append(date_debut.isoformat())
+              dates.append(date_debut.strftime('%Y-%m-%d %H:%M:%S'))
               print(type(date_debut))
     # increment start date by timedelta
               date_debut += delta

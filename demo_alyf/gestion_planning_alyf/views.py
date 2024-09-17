@@ -8,7 +8,9 @@ import time
 import win32com.client
 import pandas as pd
 from dotenv import load_dotenv
+
 import pythoncom
+
 
 load_dotenv() 
 
@@ -30,18 +32,36 @@ def affichercalendrier(request):
     return render(request, 'calendar.html', {'event': event})
 
 
+
+
+# def get_dicomodule(request):
+#     pythoncom.CoInitialize()
+#     EXCEL = win32com.client.Dispatch("Excel.Application")
+#     ExcelFile.EXCEL.Visible = True
+#     test_excel_file = ExcelFile()
+#     test_excel_file.open_worksheet("DEV WEB")
+#     modules_data = test_excel_file.get_formateur_worksheet("HUYNH")
+    
+#     # # Récupérer les données sous forme de modules
+#     # modules_data = test_excel_file.create_modules()
+    
+#     # Passer les données de manière structurée au template
+#     return render(request, "calendar.html", {'modules': modules_data})
+
 def get_dicomodule(request):
     pythoncom.CoInitialize()
-    # EXCEL = win32com.client.Dispatch("Excel.Application")
-    # test_excel_file = ExcelFile()
-    # test_excel_file.EXCEL.Visible = True
-    #dicotest = {"test":"test"}
-    test_excel_file = ExcelFile()
-    print(test_excel_file)
+    
+    
+    test_excel_file = ExcelFile() 
+    
+    # module = Module()
+   
+    # print(test_excel_file)
     test_excel_file.open_worksheet("DEV WEB")
     test_excel_file.get_formateur_worksheet("HUYNH")
     data = test_excel_file.create_modules()
-    return render(request, "calendar.html", data)
+    # data = {"excel": test_excel_file}
+    return render(request, "calendar.html", {'data':data})
     #  dicotest = {"test":"test"}
     #  print("echo croissant sandwhich")
     #  EXCEL = win32com.client.Dispatch("Excel.Application")
