@@ -2,11 +2,12 @@ import calendar
 from . import Module
 from . import ExcelFile
 from datetime import datetime
+from calendar import HTMLCalendar
 from datetime import date
 
 #https://stackoverflow.com/questions/42171990/create-a-one-month-calendar-with-events-on-it-in-python
 
-class Calendar:
+class Calendar(HTMLCalendar):
     def __init__(self, year):
         self.year = year
         # self.yearcalendar  = calendar.Calendar().yeardatescalendar(year)
@@ -20,6 +21,8 @@ class Calendar:
         self.events =  [[[[] for day  in range(len(self.yearcal[0][i][j]))] 
            for j in range(len(self.yearcal[0][i]))] 
           for i in range(len(self.yearcal[0]))]
+        
+        super(Calendar, self).__init__()
 
      
     def _yearmonthday_to_index(self, month, day):
@@ -32,6 +35,19 @@ class Calendar:
             except ValueError:
                 pass
         raise ValueError(f"There aren't {target_date} in month {month}")
+    
+    # def _yearweek_to_index(self, week):
+    #     'Trouver l’indice de la semaine dans un mois donné'
+    #     target_date = date(self.monthdatescalendar(), week)  # Créer un objet date
+    #     for  week in enumerate(self.monthdatescalendar()):  # Chercher dans la semaine correspondant
+    #         try:
+    #             i = week.index(target_date)
+    #             print(i)
+    #             return week, i
+    #         except ValueError:
+    #             pass
+    #     raise ValueError(f"There aren't {target_date} in month {week}")
+
 
     def add_event(self, month, day, event_dict):
         'Ajouter un événement pour un jour spécifique'
@@ -55,30 +71,76 @@ class Calendar:
                 self.add_module_to_calendrier(dico[key][k])
 
 
-    
-
-    # def dictionaries_module_to_calendar2(self,dico):
-    #     for key, value in dico.items():
-    #         print(f"{key} key")
-    #         print(f"{value} value")
-            
-                # self.add_module_to_calendrier(module)
-
-           
-
 
     def add_module_to_calendrier(self, module):
         
        dates =  module.extract_module_dates()
         
        for date in dates:
-            # print(type(date))
-            # print(int(date[6:7]), int(date[8:]))
-            # print(date)
-            # print((date[5:7]), (date[8:10]))
-            self.add_event(int(date[5:7]), int(date[8:]), {"id_module":module.get_id_module(), "nom_module":module.get_nom_module()})
+            self.add_event(int(date[5:7]), int(date[8:10]), {"id_module":module.get_id_module(), "nom_module":module.get_nom_module()})
 
            
      
-    
+    def formatday(self, month, day):
         
+        events = self.get_events_for_day(month, day)
+          
+        d = '' 
+        	
+        for event in events:
+            print(event)
+            d += f'<li> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</li>'
+            # d += f'<li> (event : {event}</li>'
+            
+        if day != 0:
+         return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
+         return '<td></td>'
+			
+	 	 
+    # formats a week as a tr 
+    def formatweek(self, theweek, month):
+        
+        # theweek = self.monthdays2calendar(self.year, month)
+        # week_ = self._yearweek_to_index(theweek)
+        # week = ''.join(self.formatday(d, month) for (d, month) in theweek)
+        week = ''
+        # return f'<tr> {week} </tr>'
+        
+        # # for d, weekday in theweek:
+        for d, weekday in theweek:
+            # print(d, weekday)
+            week += self.formatday(d, month)
+            return f'<tr> {week} </tr>'
+		
+	     
+    def formatmonth(self, month, withyear=True):
+        
+        gestion_planning_alyf = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
+        gestion_planning_alyf += f'{self.formatmonthname(self.year, month, withyear=withyear)}\n'
+        gestion_planning_alyf += f'{self.formatweekheader()}\n'
+        
+        for week in self.monthdays2calendar(self.year, month):
+            gestion_planning_alyf += f'{self.formatweek(week, month)}\n'
+            return gestion_planning_alyf
+        
+    def create_html_cal(self):
+
+        today = datetime.now()
+        current_month = today.month
+
+        calendar_month_values = self.yearcal[0][current_month-1]
+
+        
+        weekdata = ""
+
+        for week in calendar_month_values:
+            for day in calendar_month_values[week]:
+                weekdata += self.formatday(self.yearcal[0][current_month-1], day)
+
+
+        
+        
+		
+			
+			
+		
