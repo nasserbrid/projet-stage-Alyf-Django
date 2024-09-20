@@ -1,0 +1,10 @@
+{% extends "base.html" %} {%block content %}
+
+<h1>Calendrier</h1>
+
+<div class="calendar">
+    {{ calendar|safe }} <!-- Affichage du calendrier avec les événements -->
+</div>
+<a href="?{{ prev_month }}">Mois précédent</a> |
+<a href="?{{ next_month }}">Mois suivant</a>
+{% endblock %}

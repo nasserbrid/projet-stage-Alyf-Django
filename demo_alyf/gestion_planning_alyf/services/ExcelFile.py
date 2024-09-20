@@ -1,3 +1,4 @@
+import json
 import win32com.client
 import time
 # importing os module for environment variables
@@ -210,18 +211,23 @@ class ExcelFile:
                                                   df[0].iloc[blocks[j][-1]],df[2].iloc[blocks[0][0]],[],[])
                              
                              
+                             
+                             
 
                              listecoursterminesetfuturs = self.create_list_cours_termines_et_futur(dico_module[cours][j].get_nom_module(),
                                                                                                    self.find_session_type(dico_module[cours][j].get_session()), dico_module[cours][j].get_session())
 
                              dico_module[cours][j].set_modules_termines(listecoursterminesetfuturs[0])
                              dico_module[cours][j].set_modules_a_venir(listecoursterminesetfuturs[1])
+                             dico_module[cours][j] = dico_module[cours][j].to_dict()
+                  
+                            #  dico_module[cours][j] = json.dumps(dico_module[cours][j])
 
                         #      print(f"modules terminés : {dico_module[cours][j].get_modules_termines()}")
                  
                         #      print(f"modules à venir : {dico_module[cours][j].get_modules_a_venir()}")
         
-           return dico_module
+           return json.dumps(dico_module)
           # print(self.find_session_type(dico_module["Ecoute & Relation Clients"][0].get_session()))
                   
            #list_session = []

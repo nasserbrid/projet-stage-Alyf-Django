@@ -202,14 +202,33 @@ class Module:
 # store the dates between two dates in a list
 
 
+    
+                  
+    def to_dict(self):
+        return {
+            'id_module': str(self.__id_module),
+            'nom_module': self.__nom_module,
+            'date_debut': self.__date_debut.isoformat(),
+            'date_fin': self.__date_fin.isoformat(),
+            'session': self.__session,
+            'modules_termines': self.__modules_termines,
+            'modules_a_venir': self.__modules_a_venir
+        }
 
+    @classmethod
+    def from_dict(cls, data):
+        module = cls(
+            data['nom_module'],
+            datetime.fromisoformat(data['date_debut']),
+            datetime.fromisoformat(data['date_fin']),
+            data['session'],
+            data['modules_termines'],
+            data['modules_a_venir']
+        )
+        # Re-assign the id if needed since it's a private variable
+        module._Module__id_module = uuid.UUID(data['id_module'])
+        return module
 
-
-            
-            
 
     def getInfo(self):
         print(f"Le module est {self.get_nom_module()}, \n  la date de debut est {self.get_date_debut()}, \n la date de fin est {self.get_date_fin()}, \n il a appartient a la session {self.get_session()} \n il etait précédé de {self.get_modules_termines()} \n et sera suivi de {self.get_modules_a_venir()}") 
-
-                  
-        
