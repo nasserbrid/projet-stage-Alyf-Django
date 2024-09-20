@@ -114,11 +114,14 @@ import pythoncom
 class CombinedCalendarView(View):
     
 
-    
+    """_summary_
+    """
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         return render(request, 'calendar.html', context)
 
+    """_summary_
+    """
     def get_context_data(self, **kwargs):
         context = {}
         pythoncom.CoInitialize()  # Pour initialiser COM si nécessaire (pour Excel)
@@ -130,7 +133,7 @@ class CombinedCalendarView(View):
         calendrier_test = Calendar(d.year)
         test_excel_file = ExcelFile()
         test_excel_file.open_worksheet("DEV WEB")
-        test_excel_file.get_formateur_worksheet("HUYNH")
+        test_excel_file.get_formateur_worksheet("CROCFER")
         # dico_module = {}
         # for i in range(0,5):
         #     dico_module[i] = Module("Java", "2024-8-10 00:00:00", "2024-9-10 00:00:00", "Sessions Continues", [], []).to_dict()
@@ -156,18 +159,19 @@ class CombinedCalendarView(View):
              print(f"values : {serialized_data.values()}",type(serialized_data.values()))
             #  print(f"{type(serialize_data)}")
             
-        for key in serialized_data:
-            
+             for key in serialized_data:  
             # print(f"module_data : {module_data}", type(module_data))
-            for k in serialized_data[key]:
-                 print(k, type(k))
-                 module_data = json.loads(serialized_data[key][k])
-                #  print(f"module_data : {module_data}", type(module_data))
-                 reconstructed_module = Module.from_dict(module_data)
-                #  print(f"reconstr_module : {reconstructed_module.get_date_debut()}")
-                 serialized_data[key][k] = reconstructed_module.to_dict()
+               for k in serialized_data[key]:
+                   print(k, type(k))
+                   module_data = json.loads(serialized_data[key][k])
+                   print(f"module_data : {module_data}", type(module_data))
+                   reconstructed_module = Module.from_dict(module_data)
+                   print(f"reconstr_module : {reconstructed_module.get_date_debut()}")
+                   serialized_data[key][k] = reconstructed_module
                 
+                 
                 
+              
         #         # # Use the from_dict method to create a Module object
         #         # reconstructed_module = Module.from_dict(module_data)
         #         # print(f"reconstr_module : {reconstructed_module}")
@@ -178,8 +182,19 @@ class CombinedCalendarView(View):
         else:  
             modules = test_excel_file.create_modules()
             # Convertir les modules en dictionnaires avant de les stocker dans la session
-            self.request.session['modules'] = {key: {k: json.dumps(module.to_dict()) for k, module in value.items()} for key, value in modules.items()}
-            serialized_data = self.request.session['modules']       
+            self.request.session['modules'] = modules
+            serialized_data = self.request.session['modules'] 
+            
+            
+            # print(f"{deserialized}", type(deserialized))
+            for key in serialized_data:  
+            # print(f"module_data : {module_data}", type(module_data))
+               for k in serialized_data[key]:
+                   module_data = json.loads(serialized_data[key][k])
+                #  print(f"module_data : {module_data}", type(module_data))
+                   reconstructed_module = Module.from_dict(module_data)
+                   serialized_data[key][k] = reconstructed_module
+            
         # else:
         #     # print(f"avant session serialized_data : {test_excel_file.create_modules()}")
         #     # print(type(test_excel_file.create_modules()))   
@@ -196,7 +211,7 @@ class CombinedCalendarView(View):
                
             
         
-        # Ajouter des événements au calendrier en fonction des données Excel
+         # Ajouter des événements au calendrier en fonction des données Excel
         calendrier_test.dictionaries_module_to_calendar(serialized_data)
         html_cal = calendrier_test.formatmonth(d.month)
 
@@ -207,7 +222,7 @@ class CombinedCalendarView(View):
         context['prev_month'] = self.prev_month(d)
         context['next_month'] = self.next_month(d)
 
-        return 
+        return context
 
     def get_date(self, req_month):
         if req_month:
