@@ -219,15 +219,19 @@ class ExcelFile:
 
                              dico_module[cours][j].set_modules_termines(listecoursterminesetfuturs[0])
                              dico_module[cours][j].set_modules_a_venir(listecoursterminesetfuturs[1])
-                             dico_module[cours][j] = dico_module[cours][j].to_dict()
+                            #  dico_module[cours][j] = dico_module[cours][j].to_dict()
+                             dico_module[cours][j] = dico_module[cours][j]
                   
                             #  dico_module[cours][j] = json.dumps(dico_module[cours][j])
 
                         #      print(f"modules terminés : {dico_module[cours][j].get_modules_termines()}")
                  
                         #      print(f"modules à venir : {dico_module[cours][j].get_modules_a_venir()}")
+          #  test_a = json.dumps(dico_module)
+          #  print(f"le type de test_a : type({test_a})")
         
-           return json.dumps(dico_module)
+          #  return json.dumps(dico_module)
+           return dico_module
           # print(self.find_session_type(dico_module["Ecoute & Relation Clients"][0].get_session()))
                   
            #list_session = []

@@ -110,6 +110,7 @@ from .services.CalendrierPlanning import Calendar  # Ton calendrier personnalis�
 from datetime import date, datetime, timedelta
 import calendar
 import pythoncom
+from django.core.cache import cache
 
 class CombinedCalendarView(View):
     
@@ -124,16 +125,44 @@ class CombinedCalendarView(View):
     """
     def get_context_data(self, **kwargs):
         context = {}
-        pythoncom.CoInitialize()  # Pour initialiser COM si nécessaire (pour Excel)
+        d = self.get_date(self.request.GET.get('day', None))
+        calendrier_test = Calendar(d.year)
+        
+        
+        if 'modules' in cache:
+            #  print(self.request.session['modules'])
+            #  serialized_data = self.request.session['modules']
+             data_from_excel_file = cache.get('modules')
+             print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+             
+             
+        
+        else:
+            pythoncom.CoInitialize()  # Pour initialiser COM si nécessaire (pour Excel) 
+           
+            
+            test_excel_file = ExcelFile()
+            test_excel_file.open_worksheet("DEV WEB")
+            test_excel_file.get_formateur_worksheet("HUYNH") 
+            modules = test_excel_file.create_modules()
+            # Convertir les modules en dictionnaires avant de les stocker dans la session
+            # self.request.session['modules'] = modules
+            cache.set('modules', modules)
+            # cache.add('modules', modules)  
+            # serialized_data = self.request.session['modules'] 
+            data_from_excel_file = cache.get('modules')
+            print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+        
+       
 
         # Instanciation de la date actuelle ou de la date fournie par l'URL
-        d = self.get_date(self.request.GET.get('month', None))
+        # d = self.get_date(self.request.GET.get('month', None))
 
         # Gestion du calendrier basé sur Excel
-        calendrier_test = Calendar(d.year)
-        test_excel_file = ExcelFile()
-        test_excel_file.open_worksheet("DEV WEB")
-        test_excel_file.get_formateur_worksheet("CROCFER")
+        # calendrier_test = Calendar(d.year)
+        # test_excel_file = ExcelFile()
+        # test_excel_file.open_worksheet("DEV WEB")
+        # test_excel_file.get_formateur_worksheet("CROCFER")
         # dico_module = {}
         # for i in range(0,5):
         #     dico_module[i] = Module("Java", "2024-8-10 00:00:00", "2024-9-10 00:00:00", "Sessions Continues", [], []).to_dict()
@@ -151,26 +180,28 @@ class CombinedCalendarView(View):
         # print(f"{reconstr_module.get_date_debut()}")
         
         # Check if modules are already in session
-        if 'modules' in self.request.session:
-            #  print(self.request.session['modules'])
-             serialized_data = self.request.session['modules']
-            #  print(f"serialize_data : {serialize_data}", type(serialize_data))
-             print(f"keys : {serialized_data.keys()}", type(serialized_data))
-             print(f"values : {serialized_data.values()}",type(serialized_data.values()))
+        # if 'modules' in self.request.session:
+        # if 'modules' in cache:
+        #     #  print(self.request.session['modules'])
+        #     #  serialized_data = self.request.session['modules']
+        #      data_from_excel_file = cache.get('modules')
+        #      print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+            #  print(f"keys : {serialized_data.keys()}", type(serialized_data))
+            #  print(f"values : {serialized_data.values()}",type(serialized_data.values()))
             #  print(f"{type(serialize_data)}")
             
-             for key in serialized_data:  
-            # print(f"module_data : {module_data}", type(module_data))
-               for k in serialized_data[key]:
-                   print(k, type(k))
-                   module_data = json.loads(serialized_data[key][k])
-                   print(f"module_data : {module_data}", type(module_data))
-                   reconstructed_module = Module.from_dict(module_data)
-                   print(f"reconstr_module : {reconstructed_module.get_date_debut()}")
-                   serialized_data[key][k] = reconstructed_module
+            #  for key in serialized_data:  
+            # #    print(f"key{key}", type(key))
+            #    for k in serialized_data[key]:
+            #     #    print(f"k : {k}", type(k))
+            #        module_data = json.loads(serialized_data[key][k])
+            #        print(f"module_data : {module_data}", type(module_data))
+            #        reconstructed_module = Module.from_dict(module_data)
+            #     #    print(f"reconstr_module : {reconstructed_module.get_date_debut()}")
+            #        serialized_data[key][k] = reconstructed_module
                 
                  
-                
+         
               
         #         # # Use the from_dict method to create a Module object
         #         # reconstructed_module = Module.from_dict(module_data)
@@ -179,21 +210,25 @@ class CombinedCalendarView(View):
             
         # #         # print(reconstructed_module.__dict__)
  
-        else:  
-            modules = test_excel_file.create_modules()
-            # Convertir les modules en dictionnaires avant de les stocker dans la session
-            self.request.session['modules'] = modules
-            serialized_data = self.request.session['modules'] 
+        # else:  
+        #     modules = test_excel_file.create_modules()
+        #     # Convertir les modules en dictionnaires avant de les stocker dans la session
+        #     # self.request.session['modules'] = modules
+        #     cache.set('modules', modules)
+        #     # cache.add('modules', modules)  
+        #     # serialized_data = self.request.session['modules'] 
+        #     data_from_excel_file = cache.get('modules')
+        #     print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
             
             
-            # print(f"{deserialized}", type(deserialized))
-            for key in serialized_data:  
-            # print(f"module_data : {module_data}", type(module_data))
-               for k in serialized_data[key]:
-                   module_data = json.loads(serialized_data[key][k])
-                #  print(f"module_data : {module_data}", type(module_data))
-                   reconstructed_module = Module.from_dict(module_data)
-                   serialized_data[key][k] = reconstructed_module
+        #     # print(f"{deserialized}", type(deserialized))
+        #     for key in serialized_data:  
+        #     #    print(f"module_data : {module_data}", type(module_data))
+        #        for k in serialized_data[key]:
+        #            module_data = json.loads(serialized_data[key][k])
+        #         #    print(f"module_data : {module_data}", type(module_data))
+        #            reconstructed_module = Module.from_dict(module_data)
+        #            serialized_data[key][k] = reconstructed_module
             
         # else:
         #     # print(f"avant session serialized_data : {test_excel_file.create_modules()}")
@@ -212,7 +247,7 @@ class CombinedCalendarView(View):
             
         
          # Ajouter des événements au calendrier en fonction des données Excel
-        calendrier_test.dictionaries_module_to_calendar(serialized_data)
+        calendrier_test.dictionaries_module_to_calendar(data_from_excel_file)
         html_cal = calendrier_test.formatmonth(d.month)
 
         # Ajout du calendrier HTML au contexte
@@ -243,3 +278,23 @@ class CombinedCalendarView(View):
 
 
 
+
+# def test(request, *args, **kwargs):
+
+#         dico = cache.get("blackClover")
+#         print(f"dico : {dico}")
+    
+        
+#         return render(request, 'calendartest.html',dico)
+    
+
+
+# def test2(request):
+#     dico_test = {"Bonjour": "Igor", "Salut": "Nasser"}
+
+#     cache.set("blackClover", dico_test, 10000)
+#     print(cache.get("blackClover"))
+    
+#     return render(request, 'calendartest.html', dico_test)
+    
+    

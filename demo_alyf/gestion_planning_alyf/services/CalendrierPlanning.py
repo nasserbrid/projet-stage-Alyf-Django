@@ -27,7 +27,9 @@ class Calendar(HTMLCalendar):
      
     def _yearmonthday_to_index(self, month, day):
         'Trouver l’indice du jour dans un mois donné'
-        target_date = date(self.year, month, day)  # Créer un objet date
+        print(f"month  and day in yearmonthday_to_index : {month}, {day}")
+        target_date = date(self.year, month, day) # Créer un objet date
+        
         for week_n, week in enumerate(self.yearcal[0][month - 1]):  # Chercher dans le mois correspondant
             try:
                 i = week.index(target_date)
