@@ -20,7 +20,8 @@ class Module:
          self.__session = session
          self.__modules_termines = modules_termines
          self.__modules_a_venir = modules_a_venir
-                   
+
+   
 
      
     def get_id_module(self):
@@ -62,6 +63,8 @@ class Module:
         
     def set_modules_a_venir(self, value):
              self.__modules_a_venir = value
+   
+    
     
 
 
@@ -231,4 +234,4 @@ class Module:
 
 
     def getInfo(self):
-        print(f"Le module est {self.get_nom_module()}, \n  la date de debut est {self.get_date_debut()}, \n la date de fin est {self.get_date_fin()}, \n il a appartient a la session {self.get_session()} \n il etait précédé de {self.get_modules_termines()} \n et sera suivi de {self.get_modules_a_venir()}") 
+        return f"Le module est {self.get_nom_module()}, \n  la date de debut est {self.get_date_debut()}, \n la date de fin est {self.get_date_fin()}, \n il a appartient a la session {self.get_session()} \n il etait précédé de {self.get_modules_termines()} \n et sera suivi de {self.get_modules_a_venir()}" 

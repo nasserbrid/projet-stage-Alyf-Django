@@ -111,6 +111,8 @@ from datetime import date, datetime, timedelta
 import calendar
 import pythoncom
 from django.core.cache import cache
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 class CombinedCalendarView(View):
     
@@ -125,7 +127,7 @@ class CombinedCalendarView(View):
     """
     def get_context_data(self, **kwargs):
         context = {}
-        d = self.get_date(self.request.GET.get('day', None))
+        d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
         
         
@@ -297,4 +299,60 @@ class CombinedCalendarView(View):
     
 #     return render(request, 'calendartest.html', dico_test)
     
+
+
+
+
+def find_module_by_id(module_id, dico):
     
+    
+    for key in dico:
+                for k in dico[key]:
+                     if dico[key][k].get_id_module() == module_id:
+                          
+                        return  dico[key][k]
+                          
+            
+ 
+
+
+
+
+
+def moduleinfo(request, module_id):
+   
+    modules = cache.get("modules")
+
+    module =  find_module_by_id(module_id, modules)
+    
+    dico = {}
+    dico["module_info"] = module.getInfo()
+
+    return render(request, "module_details.html",dico)
+
+
+
+
+
+    
+    
+    
+   
+    
+
+ 
+
+
+    
+
+# def testurls(request):
+#     module = 1234
+#     dico = {}
+
+#     def redirectTest(module):
+#         return HttpResponseRedirect(reverse("moduleinfo"), args = (module, ))
+    
+#     test = redirectTest(3)
+#     print(test)
+
+#     return render(request, 'test_redir.html', dico)

@@ -4,8 +4,18 @@ from . import ExcelFile
 from datetime import datetime
 from calendar import HTMLCalendar
 from datetime import date
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 #https://stackoverflow.com/questions/42171990/create-a-one-month-calendar-with-events-on-it-in-python
+
+
+def redirect_to_module_info(uuid):
+    # ...
+    uuid = uuid
+    # ...
+    return HttpResponseRedirect(reverse("moduleinfo", args=(uuid,)))
 
 class Calendar(HTMLCalendar):
     def __init__(self, year):
@@ -92,7 +102,8 @@ class Calendar(HTMLCalendar):
             
             for event in events:
                 print(event)
-                d += f'<li> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</li>'
+                url = reverse('moduleinfo', args=[event['id_module']])
+                d += f'<li><a href="{url}"> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</a></li>'
             return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
          
           
