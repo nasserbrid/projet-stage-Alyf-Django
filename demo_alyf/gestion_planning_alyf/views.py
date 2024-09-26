@@ -100,6 +100,7 @@
 #     # data = {"excel": test_excel_file}
 #     return render(request, "calendar.html", {'data':data})
    
+import email
 from .services.Module import Module
 import json
 from django.views import View
@@ -111,10 +112,51 @@ from datetime import date, datetime, timedelta
 import calendar
 import pythoncom
 from django.core.cache import cache
+from django.views.generic.detail import DetailView
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
+from .models import *
 
-class CombinedCalendarView(View):
+class MyLoginView(LoginView):
+ 
+    # Define a view function for the login page
+    def get(self, request):
+    # Check if the HTTP request method is POST (form submission)
+     if request.method == "POST":
+        username = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # Check if a user with the provided username exists
+        if not User.objects.filter(email=email).exists():
+            # Display an error message if the username does not exist
+            messages.error(request, 'Invalid Username')
+            return redirect('/login/')
+        
+        # Authenticate the user with the provided username and password
+        user = authenticate(email=email, password=password)
+        
+        if user is None:
+            # Display an error message if authentication fails (invalid password)
+            messages.error(request, "Invalid Password")
+            return redirect('/login/')
+        else:
+            # Log in the user and redirect to the home page upon successful login
+            login(request, user)
+            return redirect('/home/')
+    
+    # Render the login page template (GET request)
+     return render(request, 'login.html')
     
 
+class CalendarView(View):
+    
+   
+    
+    
     """_summary_
     """
     def get(self, request, *args, **kwargs):
@@ -125,7 +167,7 @@ class CombinedCalendarView(View):
     """
     def get_context_data(self, **kwargs):
         context = {}
-        d = self.get_date(self.request.GET.get('day', None))
+        d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
         
         
@@ -297,4 +339,48 @@ class CombinedCalendarView(View):
     
 #     return render(request, 'calendartest.html', dico_test)
     
+# class CalendarDetailView(DetailView):
+     
     
+#      def find_module_by_id(module_id, dico):
+#          for key in dico:
+#              for k in dico[key]:
+#                  if dico[key][k].get_id_module() == module_id:
+#                     return dico[key][k]
+    
+#      def moduleinfo(self, request, module_id):           
+#             modules = cache.get("modules")        
+#             print(type(modules))        
+#             module = self.find_module_by_id(module_id, modules)        
+#             print(type(module))            
+#             dico = module.to_dict()        
+#             print(type(dico))        
+#             dicocontext = {}        
+#             dicocontext["module_dict"] = dico        
+#             return render(request, "calendar_detail.html",dicocontext)   
+
+  
+class CalendarDetailView(DetailView):    
+      def find_module_by_id(self, module_id, dico): 
+          for key in dico:                
+              for k in dico[key]:
+                  if dico[key][k].get_id_module() == module_id: 
+                      return  dico[key][k]  
+                   
+      def get(self, request, module_id):        
+            modules = cache.get("modules")  
+            print(type(modules))       
+            module = self.find_module_by_id(module_id, modules)    
+            print(type(module))       
+            dico = module.to_dict()    
+            print(type(dico))       
+            dicocontext = {}       
+            dicocontext["module_dict"] = dico       
+            return render(request, "module_details.html",dicocontext)     
+          
+          
+             
+             
+
+         
+         

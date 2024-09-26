@@ -1,9 +1,15 @@
 from django.urls import path
 from . import views
-from .views import CombinedCalendarView
+from .views import CalendarView, CalendarDetailView, MyLoginView
 
 urlpatterns = [
-     path('calendar/', CombinedCalendarView.as_view(), name='combined_calendar'),
+     path('calendar/', CalendarView.as_view(), name='calendar'),
+     path('moduledetails/<uuid:module_id>/', CalendarDetailView.as_view(), name='moduleinfo'),  
+     path('login/', MyLoginView.as_view(), name='login_page')
+     
+    
+     
+     
     #  path('caltest/', views.test, name='test'),
     #  path('caltest2/', views.test2, name='test2')
 

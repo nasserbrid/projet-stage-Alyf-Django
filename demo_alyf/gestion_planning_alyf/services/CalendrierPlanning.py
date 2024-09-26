@@ -1,9 +1,13 @@
 import calendar
+
+from requests import request
 from . import Module
 from . import ExcelFile
 from datetime import datetime
 from calendar import HTMLCalendar
 from datetime import date
+from django.urls import reverse
+
 
 #https://stackoverflow.com/questions/42171990/create-a-one-month-calendar-with-events-on-it-in-python
 
@@ -92,7 +96,10 @@ class Calendar(HTMLCalendar):
             
             for event in events:
                 print(event)
-                d += f'<li> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</li>'
+                url = reverse('moduleinfo', args=[event['id_module']])
+                d += f'<li><a href="{url}"> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</a></li>'
+                # d += f'<li><a href="{request.build_absolute_uri(reverse("calendar_detail", kwargs={"id_module": event["id_module"]}))}"> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</a></li>'
+
             return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
          
           
