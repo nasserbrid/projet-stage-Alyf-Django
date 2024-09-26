@@ -168,6 +168,7 @@ class CalendarView(View):
     def get_context_data(self, **kwargs):
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
+        d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
         
         
