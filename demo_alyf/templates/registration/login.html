@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <!-- Login form -->
-        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+        <form class="col-6 mx-auto card p-3 shadow-lg" method="post" action="{% url 'login' %}">
             <h1 style="text-align: center;"><span style="color: green;">Alyf</span></h1>
 
             {% csrf_token %}  <!-- CSRF token for security -->
@@ -19,18 +19,23 @@
             <hr>
 
             <!-- Display error/success messages -->
-            {% if messages %}
-            <div class="alert alert-primary" role="alert">
-                {% for message in messages %}
-                {{ message }}
-                {% endfor %}
+            {% if form.errors %}
+            <div class="alert alert-danger">
+              <strong>Error:</strong> Please correct the error{{ form.errors|pluralize }} below.
             </div>
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
             {% endif %}
+          {% endif %}
 
             <!-- Username input field -->
             <div class="form-group">
-                <label for="exampleInputEmail1">email</label>
-                <input type="text" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp"
+                <label for="exampleInputEmail1">username</label>
+                <input type="text" class="form-control" name="username" id="exampleInputEmail1" aria-describedby="emailHelp"
                     placeholder="Enter email" required>
             </div>
 
@@ -41,7 +46,7 @@
             </div>
 
             <!-- Link to registration page -->
-            <p>Don't have an account <a href="/register/">Register</a> </p>
+            <!-- <p>Don't have an account <a href="/register/">Register</a> </p> -->
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Submit</button>

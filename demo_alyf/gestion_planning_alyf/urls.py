@@ -1,11 +1,14 @@
 from django.urls import path
 from . import views
-from .views import CalendarView, CalendarDetailView, MyLoginView
+from .views import CalendarView, CalendarDetailView
 
 urlpatterns = [
      path('calendar/', CalendarView.as_view(), name='calendar'),
      path('moduledetails/<uuid:module_id>/', CalendarDetailView.as_view(), name='moduleinfo'),  
-     path('login/', MyLoginView.as_view(), name='login_page')
+    #  path('login/', MyLoginView.as_view(), name='login_page'),
+     path('home',views.home, name='home'),
+     path("personal", views.personalspace, name = "perso"),
+     path("selectformateur", views.selectformateur, name = "selectformateur")
      
     
      

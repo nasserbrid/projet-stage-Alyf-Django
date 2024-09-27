@@ -101,12 +101,15 @@
 #     return render(request, "calendar.html", {'data':data})
    
 import email
+
+from django.urls import reverse_lazy
 from .services.Module import Module
 import json
 from django.views import View
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from .services.ExcelFile import ExcelFile
+from .services.Formateur import Formateur
 from .services.CalendrierPlanning import Calendar  # Ton calendrier personnalisé
 from datetime import date, datetime, timedelta
 import calendar
@@ -118,38 +121,98 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
+#from django.contrib.auth.views import LoginView
 from .models import *
+from django.contrib.messages import get_messages
+import sys
+import logging
+logger = logging.getLogger(__name__)
 
-class MyLoginView(LoginView):
+# class MyLoginView(LoginView):
+
  
-    # Define a view function for the login page
-    def get(self, request):
-    # Check if the HTTP request method is POST (form submission)
-     if request.method == "POST":
-        username = request.POST.get('email')
-        password = request.POST.get('password')
+
+
+
+#     def form_valid(self,  form):
+     
+#         logger.debug("Form is valid!")
+       
+#         return super().form_valid(form)
+
+#     def form_invalid(self, form):
         
-        # Check if a user with the provided username exists
-        if not User.objects.filter(email=email).exists():
-            # Display an error message if the username does not exist
-            messages.error(request, 'Invalid Username')
-            return redirect('/login/')
-        
-        # Authenticate the user with the provided username and password
-        user = authenticate(email=email, password=password)
-        
-        if user is None:
-            # Display an error message if authentication fails (invalid password)
-            messages.error(request, "Invalid Password")
-            return redirect('/login/')
-        else:
-            # Log in the user and redirect to the home page upon successful login
-            login(request, user)
-            return redirect('/home/')
+#         logger.debug("Form is invalid!")
+      
+#         messages.error(self.request, "wrong password")
+#         return super().form_invalid(form)
+
+    # Utilisez le nom de votre template de connexion existant
+    #success_url = reverse_lazy('home')  # Remplacez 'home' par le nom de votre page d'accueil
+
+    # def get(self, request, *args, **kwargs):
+    #     print("Hello Nasser and Igor, Yoroshiku Onegaishimasu")
+    #     return super().get(request, *args, **kwargs)
     
-    # Render the login page template (GET request)
-     return render(request, 'login.html')
+    # def post(self, request, *args, **kwargs):
+        
+       
+    #     print("Post in action!")
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     print(f"{username} username")
+        
+
+        # if not User.objects.filter(username=username).exists():
+        #     messages.error(request, 'Invalid Email')
+          
+        #     print("email not found ")
+        #     return redirect('login')
+
+        # user = authenticate(request, username=username, password=password)
+        # print(user)
+        # if user is None:
+        #     print("Authentication failed, user is None")
+        #     sys.stdout.flush()
+        #     messages.error(request, "Invalid Password")
+        #     return self.form_invalid(self.get_form()) 
+        
+        # else:
+        #         print("in the else")
+        #     # Log in the user and redirect to the home page upon successful login
+        #         login(request, user)
+        #         return redirect('/home/')
+        # return super().post(request, *args, **kwargs)
+
+
+
+def home(request):
+     
+     if request.user.is_authenticated:
+        
+        return redirect("selectformateur/")
+
+
+
+
+     
+
+     
+
+     
+     
+
+  
+     return render(request, 'home.html')
+
+
+def selectformateur(request):
+     
+    
+        
+    return render(request, "selectformateur.html")
+
+        
     
 
 class CalendarView(View):
@@ -159,17 +222,21 @@ class CalendarView(View):
     
     """_summary_
     """
-    def get(self, request, *args, **kwargs):
+    def get(self, request , *args, **kwargs):
+       
         context = self.get_context_data()
         return render(request, 'calendar.html', context)
 
     """_summary_
     """
-    def get_context_data(self, **kwargs):
+    def get_context_data(self,   **kwargs):
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
         d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
+        instructor_name = self.request.user.username
+
+        instructor = Formateur("x" , instructor_name, 'y')
         
         
         if 'modules' in cache:
@@ -186,7 +253,7 @@ class CalendarView(View):
             
             test_excel_file = ExcelFile()
             test_excel_file.open_worksheet("DEV WEB")
-            test_excel_file.get_formateur_worksheet("HUYNH") 
+            test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
             modules = test_excel_file.create_modules()
             # Convertir les modules en dictionnaires avant de les stocker dans la session
             # self.request.session['modules'] = modules
@@ -378,6 +445,18 @@ class CalendarDetailView(DetailView):
             dicocontext = {}       
             dicocontext["module_dict"] = dico       
             return render(request, "module_details.html",dicocontext)     
+
+
+def personalspace(request):
+     
+     if  request.user.is_authenticated:
+        messages.success(request, "the dinosaur codes better than you do!")
+
+      
+        
+        
+        return render(request, 'personal.html')
+     
           
           
              
