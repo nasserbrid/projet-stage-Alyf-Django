@@ -101,6 +101,8 @@
 #     return render(request, "calendar.html", {'data':data})
    
 import email
+
+from django.urls import reverse_lazy
 from .services.Module import Module
 import json
 from django.views import View
@@ -118,43 +120,63 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
-from .models import *
+# from django.contrib.auth.views import LoginView
 
-class MyLoginView(LoginView):
+
+# class MyLoginView(LoginView):
+#     # template_name = 'login.html'  # Assurez-vous que c'est le bon nom de template
+#     # success_url = reverse_lazy('home')
+
+#     # Utilisez le nom de votre template de connexion existant
+#     #success_url = reverse_lazy('home')  # Remplacez 'home' par le nom de votre page d'accueil
+
+#     def get(self, request, *args, **kwargs):
+#         print("Hello Nasser and Igor, Yoroshiku Onegaishimasu")
+#         return super().get(request, *args, **kwargs)
+    
+#     def post(self, request, *args, **kwargs):
+#         print("Post in action!")
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         print(f"{username} username")
+        
+
+#         # if not User.objects.filter(username=username).exists():
+#         #     messages.error(request, 'Invalid Email')
+          
+#         #     print("email not found ")
+#         #     return redirect('login')
+
+#         user = authenticate(request, username=username, password=password)
+#         if user is None:
+#             messages.error(request, "Invalid Password")
+#             return self.form_invalid(self.get_form())
+#             # return redirect('login') 
+#             # return render(request, 'login/')
+        
+#         else:
+#                 print("in the else")
+#             # Log in the user and redirect to the home page upon successful login
+#                 login(request, user)
+#                 messages.success(request, "l'utilisateur {username} est connecté !")
+#                 return redirect(self.success_url)
+#                 # return redirect('/home/')
+#                 # return render(request, 'home.html')
+                
+
+
+# @login_required(login_url='login')
+def home(request):
+
+    return render(request, 'home.html')
+
+
+
+
  
-    # Define a view function for the login page
-    def get(self, request):
-    # Check if the HTTP request method is POST (form submission)
-     if request.method == "POST":
-        username = request.POST.get('email')
-        password = request.POST.get('password')
-        
-        # Check if a user with the provided username exists
-        if not User.objects.filter(email=email).exists():
-            # Display an error message if the username does not exist
-            messages.error(request, 'Invalid Username')
-            return redirect('/login/')
-        
-        # Authenticate the user with the provided username and password
-        user = authenticate(email=email, password=password)
-        
-        if user is None:
-            # Display an error message if authentication fails (invalid password)
-            messages.error(request, "Invalid Password")
-            return redirect('/login/')
-        else:
-            # Log in the user and redirect to the home page upon successful login
-            login(request, user)
-            return redirect('/home/')
-    
-    # Render the login page template (GET request)
-     return render(request, 'login.html')
-    
 
 class CalendarView(View):
     
-   
     
     
     """_summary_

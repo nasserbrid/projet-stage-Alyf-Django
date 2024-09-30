@@ -56,7 +56,7 @@ ROOT_URLCONF = 'demo_alyf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:\\Users\\iggdu\\ProjetAlyf\\django\\projet-stage-Alyf-Django\\demo_alyf\\templates'],
+        'DIRS': ['C:\\Users\\nasse\\ProjetStageAlyfDjangoV1\\demo_alyf\\templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,8 +69,16 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_REDIRECT_URL = 'home'  # Remplacez 'home' par le nom de votre page d'accueil
+LOGIN_URL = 'login'
+
 WSGI_APPLICATION = 'demo_alyf.wsgi.application'
 
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',  # Pour associer le tag 'danger' à l'erreur
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -82,6 +90,7 @@ DATABASES = {
     }
 }
 
+# AUTH_USER_MODEL = 'gestion_planning_alyf.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
