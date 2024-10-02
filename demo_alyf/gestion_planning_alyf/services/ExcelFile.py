@@ -7,6 +7,7 @@ from . import Module
 import pandas as pd
 from datetime import date
 from datetime import datetime
+
 # importing necessary functions from dotenv library
 from dotenv import load_dotenv, dotenv_values 
 # loading variables from .env file
@@ -27,7 +28,7 @@ class ExcelFile:
         
         
 
-    def open_worksheet(self, sheetName):
+    def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH") ):
            
            # self.EXCEL.Visible = True 
             self.excel.Visible = True
@@ -40,7 +41,7 @@ class ExcelFile:
                                           
                        # self.workbook = self.EXCEL.Workbooks.Open("C:\\Users\\nasse\\projet-stage-Alyf\\Test-fichier-excel\\alyfData.xlsm")
                        
-                        self.workbook = self.excel.Workbooks.Open(os.getenv("ALYFMASTERPATH"))
+                        self.workbook = self.excel.Workbooks.Open(path)
                         #print(self.workbook)
                 
                         self.worksheet = self.workbook.Sheets(sheetName)
@@ -78,6 +79,28 @@ class ExcelFile:
        
 
           self.excel.Quit()
+    
+
+    def save_instructor_sheet_separately(self, formateur_name, target_path):
+             try:
+            # Set the formateur name in the worksheet
+                self.worksheet.Cells(1, 8).Value = formateur_name
+
+            # Copy the worksheet to a new workbook
+                new_workbook = self.excel.Workbooks.Add()
+                self.worksheet.Copy(Before=new_workbook.Sheets(1))
+            
+            # Save the new workbook
+                new_workbook.SaveAs(target_path, FileFormat=52)
+                new_workbook.Close(SaveChanges=True)
+                print(f"Saved worksheet as new file: {target_path}")
+
+             except Exception as e:
+                 print(f"Error during operation: {e}")
+             finally:
+                 self.workbook.Close(SaveChanges=False)
+                 self.excel.Quit()
+
           
           
     #Définir une méthode qui permet d'utiliser le dataframe et qui va récupérer des sessions dans "DEV WEB"
@@ -166,7 +189,10 @@ class ExcelFile:
            liste_de_cours= list(filter(len, liste_de_cours))
 
            #need to have a method specifically designed to get all Indisponibilités for an instructor
-           liste_de_cours.remove("Indisponible")
+           if "Indisponible" in liste_de_cours :
+                 liste_de_cours.remove("Indisponible")
+           
+              
           # print(f"liste de cours: {liste_de_cours}")
 
            #print(f"{liste_de_cours} liste de cours")
@@ -325,7 +351,7 @@ class ExcelFile:
     # Define a dictionary with keywords as keys and corresponding session names as values
       keywords = {
         "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],
-        "Sessions Alternantes": ["ALT", "alt"],
+        "Sessions Alternantes": ["ALT", "alt", "Alt"],
         "Hors Cursus - Atos Générique": ["HC", "HORS CURSUS", "hors cursus", "horscursus", "ATOS", "atos", "ATOS GENERIQUE"]
      }
  
@@ -359,12 +385,12 @@ class ExcelFile:
        #   print(ind)
 
          value =  sessionName
-        #  print(f" value: {value}")
+         print(f" value: {value}")
          #print(df_session_name_and_dates)
 
 # Extract Column Names
          column_index = df_session_name_and_dates.columns[df_session_name_and_dates.eq(value).any()].tolist()[0]
-        #  print(column_index+1)
+         print(column_index+1)
          date_debut =df_session_name_and_dates[column_index+1][1]
          date_fin = df_session_name_and_dates[column_index+1][2]
         

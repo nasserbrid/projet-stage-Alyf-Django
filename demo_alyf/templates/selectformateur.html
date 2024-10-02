@@ -14,11 +14,12 @@
     <!-- Login form -->
     <form class="col-6 mx-auto card p-3 shadow-lg" method="post" action="{% url 'calendar' %}">
         <h1 style="text-align: center;"><span style="color: green;">Alyf</span></h1>
+        {% csrf_token %} 
 
-        <select name="cars" id="cars">
-            <option value="volvo">Omari</option>
-            <option value="saab">Huynh</option>
-            <option value="mercedes">Crocfer</option>
+        <select name="instructorname" id="instructorname">
+            <option value="Omari">Omari</option>
+            <option value="Huynh">Huynh</option>
+            <option value="Crocfer">Crocfer</option>
          
           </select>
         

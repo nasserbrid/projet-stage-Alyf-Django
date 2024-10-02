@@ -190,7 +190,7 @@ def home(request):
      
      if request.user.is_authenticated:
         
-        return redirect("selectformateur/")
+        return redirect("calendar/")
 
 
 
@@ -226,23 +226,47 @@ class CalendarView(View):
        
         context = self.get_context_data()
         return render(request, 'calendar.html', context)
+    
+    
+    def post(self, request, *args, **kwargs):
+        selected_instructor = request.POST.get('instructorname')  # Get the selected value from the form
+        context = self.get_context_data(instructor=selected_instructor)
+        return render(request, 'calendar.html', context)
 
     """_summary_
     """
-    def get_context_data(self,   **kwargs):
+    def get_context_data(self, instructor=None,  **kwargs):
+        print(f"{self.request.GET.get} post object ")
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
         d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
-        instructor_name = self.request.user.username
+        
+        if instructor:
+            # You might want to map the 'cars' values to actual instructor names
+            instructor_name = {
+                'Omari': 'Omari',
+                'Huynh': 'Huynh',
+                'Crocfer': 'Crocfer'
+            }.get(instructor)
+        else:
+            instructor_name = self.request.user.username
+            print(f"{self.request.POST} post object ")
+            
+
+
+      
 
         instructor = Formateur("x" , instructor_name, 'y')
         
         
-        if 'modules' in cache:
+        cache_key = f'modules_{instructor_name}'
+
+        
+        if cache_key in cache:
             #  print(self.request.session['modules'])
             #  serialized_data = self.request.session['modules']
-             data_from_excel_file = cache.get('modules')
+             data_from_excel_file = cache.get(cache_key)
              print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
              
              
@@ -257,10 +281,10 @@ class CalendarView(View):
             modules = test_excel_file.create_modules()
             # Convertir les modules en dictionnaires avant de les stocker dans la session
             # self.request.session['modules'] = modules
-            cache.set('modules', modules)
+            cache.set(cache_key, modules)
             # cache.add('modules', modules)  
             # serialized_data = self.request.session['modules'] 
-            data_from_excel_file = cache.get('modules')
+            data_from_excel_file = cache.get(cache_key)
             print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
         
        
