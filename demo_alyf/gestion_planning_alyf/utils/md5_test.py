@@ -15,7 +15,9 @@ def compute_file_md5(file_path, chunk_size=8192):
 def compare_excel_files(file1_path, file2_path):
     # Compute MD5 hash for both files
     file1_hash = compute_file_md5(file1_path)
+    print(file1_hash)
     file2_hash = compute_file_md5(file2_path)
+    print(file2_hash)
     
     # Compare hashes
     return file1_hash == file2_hash
@@ -37,12 +39,12 @@ def compare_excel_files(file1_path, file2_path):
 
 
 # Example usage
-file1_path = 'C:\\Users\\iggdu\\pythonExperiments\\pickletest\\fichiers_excel_md5_tests\\alyfDataResult.xlsm'
-file2_path = 'C:\\Users\\iggdu\\pythonExperiments\\pickletest\\fichiers_excel_md5_tests\\aaaa.xlsm'
+# file1_path = 'C:\\Users\\iggdu\\pythonExperiments\\pickletest\\fichiers_excel_md5_tests\\alyfDataResult.xlsm'
+# file2_path = 'C:\\Users\\iggdu\\pythonExperiments\\pickletest\\fichiers_excel_md5_tests\\aaaa.xlsm'
 
-if compare_excel_files(file1_path, file2_path):
-    print("The Excel files are the same.")
-else:
-    print("The Excel files have changed.")
+# if compare_excel_files(file1_path, file2_path):
+#     print("The Excel files are the same.")
+# else:
+#     print("The Excel files have changed.")
 
 

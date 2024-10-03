@@ -3,9 +3,19 @@ from django.core.cache import cache
 
 import tempfile
 
+import os
+import django
 
-from gestion_planning_alyf.services.Formateur import Formateur
-from gestion_planning_alyf.services.ExcelFile import ExcelFile
+# Définir la variable d'environnement DJANGO_SETTINGS_MODULE
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
+
+# Initialiser Django
+django.setup()
+
+from ..services import ExcelFile,Formateur
+
+
+
 
 
 
@@ -15,8 +25,9 @@ def build_schedule_files_for_formateurs(listofinstructors):
 
     formateurs = []
 
-    excelfile = ExcelFile()
-    excelfile.open_worksheet("DEV WEB")
+    # excelfile = ExcelFile()
+    # excelfile.open_worksheet("DEV WEB")
+    print("past open worksheet")
 
     for personne in listofinstructors:
         formateurs.append(Formateur("x", personne,"y"))
@@ -32,9 +43,14 @@ def build_schedule_files_for_formateurs(listofinstructors):
 
 # Create a unique temporary file for each instructor
     for formateur in formateurs:
-         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsm')
-         directory_of_individual_instructor_sheet_in_temp_storage[formateur] = temp_file.name
+         excelfile = ExcelFile()
+         excelfile.open_worksheet("DEV WEB")
+         print(excelfile.open_worksheet("DEV WEB"))
+         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsm').name
+         directory_of_individual_instructor_sheet_in_temp_storage[formateur] = temp_file
          excelfile.save_instructor_sheet_separately(formateur.get_last_name(), temp_file)
+    # cache.set("dict_sheets_temp_storage", directory_of_individual_instructor_sheet_in_temp_storage)
+    print(directory_of_individual_instructor_sheet_in_temp_storage)
     cache.set("dict_sheets_temp_storage", directory_of_individual_instructor_sheet_in_temp_storage)
 
 
@@ -44,4 +60,4 @@ def build_schedule_files_for_formateurs(listofinstructors):
 
     
    
-        
+build_schedule_files_for_formateurs(["Jolan", "Crocfer"])      
