@@ -1,3 +1,4 @@
+import uuid
 from . import ExcelFile
 # importing os module for environment variables
 import os
@@ -7,8 +8,8 @@ from dotenv import load_dotenv, dotenv_values
 load_dotenv() 
 
 class Formateur:
-    def __init__(self,id, first_name, last_name, email):
-        self.__id = id
+    def __init__(self, first_name, last_name, email):
+        self.__id = uuid.uuid4()
         self.__first_name = first_name 
         self.__last_name = last_name 
         self.__email = email 

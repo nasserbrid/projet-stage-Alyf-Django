@@ -72,6 +72,14 @@ TEMPLATES = [
 LOGIN_REDIRECT_URL = 'home'  # Remplacez 'home' par le nom de votre page d'accueil
 LOGIN_URL = 'login'
 
+
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+#     'gestion_planning_alyf.backends.EmailBackend',  # Si vous avez un backend personnalisé
+# ]
+
+
+
 WSGI_APPLICATION = 'demo_alyf.wsgi.application'
 
 from django.contrib.messages import constants as messages
@@ -141,4 +149,19 @@ CACHES = {
         'LOCATION': '/var/tmp/django_cache',
          'TIMEOUT': 60 * 60 * 24,
     }
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
 }
