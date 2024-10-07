@@ -2,9 +2,15 @@
 
 {% csrf_token %} 
 <h1>Calendrier</h1>
+<div>
+
+    {{username}}
+
+
+</div>
 
 <div class="calendar">
-    {{ calendar|safe }} <!-- Affichage du calendrier avec les événements -->
+    {{ calendar}} <!-- Affichage du calendrier avec les événements -->
    
 </div>
 <a href="?{{ prev_month }}">Mois précédent</a> |
