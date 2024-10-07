@@ -13,11 +13,11 @@ from django.urls import reverse
 #https://stackoverflow.com/questions/42171990/create-a-one-month-calendar-with-events-on-it-in-python
 
 
-def redirect_to_module_info(uuid):
-    # ...
-    uuid = uuid
-    # ...
-    return HttpResponseRedirect(reverse("moduleinfo", args=(uuid,)))
+# def redirect_to_module_info(uuid):
+#     # ...
+#     uuid = uuid
+#     # ...
+#     return HttpResponseRedirect(reverse("moduleinfo", args=(uuid,)))
 
 class Calendar(HTMLCalendar):
     def __init__(self, year):

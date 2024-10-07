@@ -126,6 +126,21 @@ from .models import *
 from django.contrib.messages import get_messages
 import sys
 import logging
+import os
+# importing necessary functions from dotenv library
+from dotenv import load_dotenv, dotenv_values 
+# loading variables from .env file
+load_dotenv() 
+
+
+# 2
+# 3
+# 4
+# 5
+# 6
+# 7
+# 8
+from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # class MyLoginView(LoginView):
@@ -201,6 +216,12 @@ def selectformateur(request):
         
     return render(request, "selectformateur.html")
 
+
+
+
+
+
+
         
     
 
@@ -214,42 +235,78 @@ class CalendarView(View):
        
         context = self.get_context_data()
         return render(request, 'calendar.html', context)
+    
+    
+    def post(self, request, *args, **kwargs):
+        selected_instructor = request.POST.get('instructorname')  # Get the selected value from the form
+        context = self.get_context_data(instructor=selected_instructor)
+        return render(request, 'calendar.html', context)
 
     """_summary_
     """
-    def get_context_data(self,   **kwargs):
+    def get_context_data(self, instructor=None, file=None ,**kwargs):
+        print(f"{self.request.GET.get} get object ")
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
         d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
-        instructor_name = self.request.user.username
+        
+        if instructor:
+            # You might want to map the 'cars' values to actual instructor names
+            instructor_name = {
+                'Omari': 'Omari',
+                'Huynh': 'Huynh',
+                'Crocfer': 'Crocfer',
+                'MAKRI': 'MAKRI',
+                'HMIDACH': 'HMIDACH',
+                 'ZIANI': 'ZIANI',
+                 'NOUMA': 'NOUMA',
+                 'NHAILA':'NHAILA',
+                 'LAMNAH': 'LAMNAH'
+
+            }.get(instructor)
+        else:
+            instructor_name = self.request.user.username
+            print(f"{self.request.POST} post object ")
+            
 
         instructor = Formateur("x" , instructor_name, 'y')
         
         
-        if 'modules' in cache:
+        cache_key = f'modules_{instructor_name}'
+
+        
+        if cache_key in cache:
             #  print(self.request.session['modules'])
             #  serialized_data = self.request.session['modules']
-             data_from_excel_file = cache.get('modules')
+             data_from_excel_file = cache.get(cache_key)
              print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
              
              
         
         else:
             pythoncom.CoInitialize()  # Pour initialiser COM si nécessaire (pour Excel) 
-           
-            
-            test_excel_file = ExcelFile()
-            test_excel_file.open_worksheet("DEV WEB")
-            test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
-            modules = test_excel_file.create_modules()
+          
+            if cache.get("master_excel_file"):
+                 file = cache.get("master_excel_file")
+                 test_excel_file = ExcelFile()
+                 test_excel_file.open_worksheet("DEV WEB", file)
+                 test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
+                 modules = test_excel_file.create_modules(file)
+                 cache.set(cache_key, modules)
+                 data_from_excel_file = cache.get(cache_key)
+            else :
+                test_excel_file = ExcelFile()
+                test_excel_file.open_worksheet("DEV WEB")
+                test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
+                modules = test_excel_file.create_modules()
             # Convertir les modules en dictionnaires avant de les stocker dans la session
             # self.request.session['modules'] = modules
-            cache.set('modules', modules)
+                cache.set(cache_key, modules)
             # cache.add('modules', modules)  
             # serialized_data = self.request.session['modules'] 
-            data_from_excel_file = cache.get('modules')
-            print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+                data_from_excel_file = cache.get(cache_key)
+                print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
         
        
 
@@ -423,8 +480,10 @@ class CalendarDetailView(DetailView):
                   if dico[key][k].get_id_module() == module_id: 
                       return  dico[key][k]  
                    
-      def get(self, request, module_id):        
-            modules = cache.get("modules")  
+      def get(self, request, module_id):
+                   
+            modules = cache.get(cache_key)
+            print(f"{modules}")  
             print(type(modules))       
             module = self.find_module_by_id(module_id, modules)    
             print(type(module))       
