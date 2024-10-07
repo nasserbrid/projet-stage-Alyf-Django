@@ -35,3 +35,4 @@ def upload_excelfile_to_temp():
     # print(f"The temporary file is available at: {destination}")
 
 
+upload_excelfile_to_temp()

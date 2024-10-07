@@ -53,7 +53,8 @@ class ExcelFile:
                        # self.workbook = self.EXCEL.Workbooks.Open("C:\\Users\\nasse\\projet-stage-Alyf\\Test-fichier-excel\\alyfData.xlsm")
                        
                         self.workbook = self.excel.Workbooks.Open(path)
-                        print(self.workbook)
+                        print("hello")
+                        print(self.workbook.Sheets)
                 
                         self.worksheet = self.workbook.Sheets(sheetName)
                         
