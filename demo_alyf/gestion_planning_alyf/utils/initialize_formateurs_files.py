@@ -6,6 +6,7 @@ import tempfile
 import os
 import django
 
+
 # Définir la variable d'environnement DJANGO_SETTINGS_MODULE
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 
@@ -13,6 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 django.setup()
 
 from ..services import ExcelFile,Formateur
+#from .getinstructorlist import getinstructorlist
 
 
 
@@ -20,8 +22,10 @@ from ..services import ExcelFile,Formateur
 
 
 
+def build_schedule_files_for_formateurs():
 
-def build_schedule_files_for_formateurs(listofinstructors):
+    excel = ExcelFile()
+    instructors = excel.retrieve_instructor_list("FORMATEURS - MODULES")
 
     formateurs = []
 
@@ -29,8 +33,8 @@ def build_schedule_files_for_formateurs(listofinstructors):
     # excelfile.open_worksheet("DEV WEB")
     print("past open worksheet")
 
-    for personne in listofinstructors:
-        formateurs.append(Formateur("x", personne,"y"))
+    for instructor in instructors:
+        formateurs.append(Formateur(instructor[1], instructor[2],instructor[0]))
 
 
    
@@ -40,11 +44,13 @@ def build_schedule_files_for_formateurs(listofinstructors):
 
 # Create a dictionary to store the temporary file paths
     directory_of_individual_instructor_sheet_in_temp_storage = {}
+    alyfmasterfile = cache.get("master_excel_file")
 
 # Create a unique temporary file for each instructor
     for formateur in formateurs:
          excelfile = ExcelFile()
-         excelfile.open_worksheet("DEV WEB")
+         
+         excelfile.open_worksheet("DEV WEB", alyfmasterfile)
          print(excelfile.open_worksheet("DEV WEB"))
          temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsm').name
          directory_of_individual_instructor_sheet_in_temp_storage[formateur] = temp_file
@@ -60,4 +66,4 @@ def build_schedule_files_for_formateurs(listofinstructors):
 
     
    
-build_schedule_files_for_formateurs(["Jolan", "Crocfer"])      
+build_schedule_files_for_formateurs()

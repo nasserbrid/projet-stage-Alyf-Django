@@ -472,7 +472,47 @@ class ExcelFile:
          # print(f"cours termines: {cours_termines}, cours_futurs:{cours_futurs}" )
 
           return cours_termines, cours_futurs
-       
+
+
+    def retrieve_instructor_list(self, sheetName):
+         
+
+          if cache.get("master_excel_file") != None:
+               excel_path = cache.get("master_excel_file")
+               self.open_worksheet(sheetName, excel_path)
+          else:
+               excel_path = os.getenv("ALYFDEVPATH")
+               self.open_worksheet(sheetName)
+          
+
+          
+          dico_formateur_module = {}
+          df =  pd.read_excel(excel_path, sheet_name=sheetName, skiprows=1, nrows=150,usecols=[0, 1],  header=None ,index_col=None)
+          df[[2, 3]] = df[0].apply(self.split_name).apply(pd.Series)
+          df = df.drop(0, axis="columns")
+          dico_formateur_module = df.to_dict("split")
+
+          return dico_formateur_module["data"]
+          
+         
+    def split_name(self,full_name):
+        parts = full_name.split()
+        split_point = next((i for i, part in enumerate(parts) if part.isupper()), len(parts))
+        return ' '.join(parts[:split_point]), ' '.join(parts[split_point:])
+    
+
+    def test(self):
+      return 'blue'
+# Assuming you have a DataFrame named 'df' with a column 'full_name'
+
+
+# Apply the function to the column
+
+
+
+
+          # df[['First Name', 'Last Name']] = df[0].str.split(' ', expand=True)
+          
          
           
          

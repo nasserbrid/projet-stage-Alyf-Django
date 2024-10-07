@@ -190,7 +190,7 @@ def home(request):
      
      if request.user.is_authenticated:
         
-        return redirect("calendar/")
+        return redirect("selectformateur/")
 
 
 
@@ -235,7 +235,7 @@ class CalendarView(View):
 
     """_summary_
     """
-    def get_context_data(self, instructor=None,  **kwargs):
+    def get_context_data(self, instructor=None, file=None ,**kwargs):
         print(f"{self.request.GET.get} post object ")
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
@@ -247,7 +247,14 @@ class CalendarView(View):
             instructor_name = {
                 'Omari': 'Omari',
                 'Huynh': 'Huynh',
-                'Crocfer': 'Crocfer'
+                'Crocfer': 'Crocfer',
+                'MAKRI': 'MAKRI',
+                'HMIDACH': 'HMIDACH',
+                 'ZIANI': 'ZIANI',
+                 'NOUMA': 'NOUMA',
+                 'NHAILA':'NHAILA',
+                 'LAMNAH': 'LAMNAH'
+
             }.get(instructor)
         else:
             instructor_name = self.request.user.username
@@ -273,12 +280,12 @@ class CalendarView(View):
         
         else:
             pythoncom.CoInitialize()  # Pour initialiser COM si nécessaire (pour Excel) 
-           
+            file = cache.get("master_excel_file")
             
             test_excel_file = ExcelFile()
-            test_excel_file.open_worksheet("DEV WEB")
+            test_excel_file.open_worksheet("DEV WEB", file)
             test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
-            modules = test_excel_file.create_modules()
+            modules = test_excel_file.create_modules(file)
             # Convertir les modules en dictionnaires avant de les stocker dans la session
             # self.request.session['modules'] = modules
             cache.set(cache_key, modules)
