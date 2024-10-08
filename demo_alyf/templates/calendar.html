@@ -2,12 +2,7 @@
 
 {% csrf_token %} 
 <h1>Calendrier</h1>
-<div>
 
-    {{file}}
-
-
-</div>
 <div>
 
     {{username}}
@@ -21,4 +16,5 @@
 </div>
 <a href="?{{ prev_month }}">Mois précédent</a> |
 <a href="?{{ next_month }}">Mois suivant</a>
+<button type="submit" onclick="location.href='{% url 'telecharger_document' filename%}'" >Telecharger fichier excel</button>
 {% endblock %}

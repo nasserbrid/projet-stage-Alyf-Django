@@ -63,22 +63,23 @@ def selectformateur(request):
     return render(request, "selectformateur.html", {"selectvalues":names})
 
 
-def telecharger_document(request):
+def telecharger_document(request, file):
         # f = Document.objects.filter(id = id).first()
-        files = cache.get("dict_sheets_temp_storage")
-        print(f"{files} files value")
-        formateur = cache.get("current_formateur")
-        print(f"{formateur} formateur value")
-        for key, value in files.items():
-            if key.get_last_name() == formateur:
-                file = files[key]
-                print(f"{file}: file value")
+        # files = cache.get("dict_sheets_temp_storage")
+        # print(f"{files} files value")
+        # formateur = cache.get("current_formateur")
+        # print(f"{formateur} formateur value")
+        # for key, value in files.items():
+        #     if key.get_last_name() == formateur:
+        #         file = files[key]
+        #         print(f"{file}: file value")
                 data = open(file, 'rb').read()
+                
                 response = HttpResponse(data, content_type='application/vnd.ms-excel.sheet.macroEnabled.12')
-                response["Content-Disposition"] = u"attachment; filename={0}.md".format(file.name)
+                response["Content-Disposition"] = u"attachment; filename={0}.xlsm".format(file)
                 return response
-            else:
-             raise Http404      
+            # else:
+            #  raise Http404      
     
 
 class CalendarView(View):
@@ -177,6 +178,21 @@ class CalendarView(View):
 
         context['username'] = mark_safe(self.request.user.username)
         
+        files = cache.get("dict_sheets_temp_storage")
+        print(f"{files}: files values")
+        print(f"{instructor_name}: instructor name")
+        for key, value in files.items():
+        
+            if key.get_last_name()== instructor_name.upper()  :
+                file = files[key]
+            
+                print(f"{file}: file value")
+            # if key.get_last_name() ==  instructor_name :
+                
+                
+                
+            
+        context['filename'] = file
         # context['file'] = self.telecharger_document()
 
         return context
