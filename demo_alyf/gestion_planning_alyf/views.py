@@ -40,13 +40,40 @@ logger = logging.getLogger(__name__)
 
 
 
-def home(request):
+# def home(request):
      
-     if request.user.is_authenticated:
+#      if request.user.is_authenticated:
+
+#         def is_member(user):
+#              return user.groups.filter(name='admin').exists()
+
         
-        return redirect("selectformateur/")
+
+#         @user_passes_test(is_member)
+#         def redirect_to_selectformateur(request):
+
+#          return redirect("selectformateur/")
+
+    
+        
+#         return redirect("selectformateur/")
   
-     return render(request, 'home.html')
+#      return render(request, 'home.html')
+
+def is_admin(user):
+    return user.groups.filter(name='administrateur').exists()
+
+def home(request):
+    if request.user.is_authenticated:
+        if is_admin(request.user):
+            # Si l'utilisateur est admin, redirection vers selectformateur
+            return redirect("selectformateur/")
+        else:
+            # Si l'utilisateur est un formateur (ou autre), redirection vers le calendrier
+            return redirect("calendar/")
+    else:
+        # Si l'utilisateur n'est pas authentifié, on retourne à la page d'accueil
+        return render(request, 'home.html')
 
 
 def selectformateur(request):
@@ -74,9 +101,11 @@ def telecharger_document(request, file):
         #         file = files[key]
         #         print(f"{file}: file value")
                 data = open(file, 'rb').read()
+                username = request.session.get("current_formateur", request.user.username)
+                print(f"{username} : username")
                 
                 response = HttpResponse(data, content_type='application/vnd.ms-excel.sheet.macroEnabled.12')
-                response["Content-Disposition"] = u"attachment; filename={0}.xlsm".format(file)
+                response["Content-Disposition"] = u"attachment; filename={0}".format(username)
                 return response
             # else:
             #  raise Http404      
@@ -98,31 +127,40 @@ class CalendarView(View):
     
     
     def post(self, request, *args, **kwargs):
+    
+        
         selected_instructor = request.POST.get('instructorname') 
-        cache.set("current_formateur", selected_instructor)
+        self.request.session["current_formateur"] = selected_instructor
         context = self.get_context_data(instructor=selected_instructor)
-        print(context.keys())
+      
         return render(request, 'calendar.html', context)
 
     """_summary_
     """
     def get_context_data(self, instructor=None, file=None ,**kwargs):
-        print(f"{self.request.GET.get} ")
+      
         context = {}
         d = self.get_date(self.request.GET.get('month', None))
-        d = self.get_date(self.request.GET.get('month', None))
+        print(f"{d} date qui provient de l'objet get")
+        # d = self.get_date(self.request.GET.get('month', None))
         calendrier_test = Calendar(d.year)
         
         if instructor:
             # You might want to map the 'cars' values to actual instructor names
             instructor_name = instructor
+            print(f"{instructor} passed")
+            self.request.session["current_formateur"] = instructor_name
 
-        elif cache.get("current_formateur") != None:
-              instructor_name = cache.get("current_formateur")
 
-        else:
-            instructor_name = self.request.user.username
-            print(f"{self.request.POST} post object ")
+        else :
+            instructor_name = self.request.session.get("current_formateur", self.request.user.username)
+        #       print(f"current instructor is not none {self.request.session["current_formateur"]}")
+        #       instructor_name = self.request.session["current_formateur"]
+
+        # else:
+        #     instructor_name = self.request.user.username
+        #     self.request.session["current_formateur"] = instructor_name
+        #     print(f"{self.request.POST} post object ")
             
 
         instructor = Formateur("x" , instructor_name, 'y')
@@ -193,6 +231,7 @@ class CalendarView(View):
                 
             
         context['filename'] = file
+        
         # context['file'] = self.telecharger_document()
 
         return context
@@ -253,7 +292,7 @@ class CalendarDetailView(DetailView):
                       return  dico[key][k]  
                    
       def get(self, request, module_id): 
-            instructeur = cache.get("current_formateur") 
+            instructeur = self.request.session["current_formateur"]
             print('in the get method')
             print(instructeur)
             cache_key =  f'modules_{instructeur}'      

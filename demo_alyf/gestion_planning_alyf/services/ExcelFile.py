@@ -74,6 +74,8 @@ class ExcelFile:
                         #self.EXCEL.Quit()
                         self.excel.Quit()
                         exit(1)
+                
+                         
 
                     
                     

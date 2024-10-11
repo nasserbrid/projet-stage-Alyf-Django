@@ -56,7 +56,7 @@ ROOT_URLCONF = 'demo_alyf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:\\Users\\nasse\\ProjetStageAlyfDjangoV1\\demo_alyf\\templates'],
+        'DIRS': ['C:\\Users\\iggdu\\ProjetAlyf\\django\\projet-stage-Alyf-Django\\demo_alyf\\templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +147,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/var/tmp/django_cache',
-         'TIMEOUT': 60 * 60 * 24,
+         'TIMEOUT': 60 * 60 * 24 * 30 ,
     }
 }
 

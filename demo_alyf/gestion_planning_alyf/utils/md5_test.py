@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 from django.core.cache import cache 
 from ..services.ExcelFile import ExcelFile
 from ..services.Formateur import Formateur
@@ -16,8 +17,10 @@ def compare_excel_files(file1_path, file2_path):
     # Compute MD5 hash for both files
     file1_hash = compute_file_md5(file1_path)
     print(file1_hash)
+    
     file2_hash = compute_file_md5(file2_path)
     print(file2_hash)
+    # print(hmac.compare_digest(file1_hash, file2_hash))
     
     # Compare hashes
     return file1_hash == file2_hash

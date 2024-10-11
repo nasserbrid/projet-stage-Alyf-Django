@@ -9,7 +9,7 @@ urlpatterns = [
      path('home',views.home, name='home'),
      path("personal", views.personalspace, name = "perso"),
      path("selectformateur/", views.selectformateur, name = "selectformateur"),
-     path("telecharger/<str:file>", views.telecharger_document, name= "telecharger_document")
+     path("telecharger/<str:file>/", views.telecharger_document, name= "telecharger_document")
      
     
      
