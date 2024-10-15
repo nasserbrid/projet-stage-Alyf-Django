@@ -41,10 +41,11 @@ class ExcelFile:
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH") ):
            
            # self.EXCEL.Visible = True 
-            self.excel.Visible = True
+            self.excel.Visible = False
+            self.excel.DisplayAlerts = False
         
            # if self.EXCEL.Visible == True :s
-            if self.excel.Visible == True:
+            if self.excel.Visible == False:
                    print("excel is visible")
                   
                                 
@@ -85,7 +86,7 @@ class ExcelFile:
           
           self.worksheet.Cells(1, 8).Value = formateur_name
        
-          self.workbook.SaveAs(os.getenv("ALYFDEVPATH"))
+          self.workbook.SaveAs(os.getenv("ALYFDEVPATH"), ConflictResolution=2)
           
           self.workbook.Close(SaveChanges=True)
         
@@ -96,6 +97,9 @@ class ExcelFile:
     
 
     def save_instructor_sheet_separately(self, formateur_name, target_path):
+            
+            self.excel.visible = False
+            # self.excel.DisplayAlerts = False
             try:
             # Set the formateur name in the worksheet
                 self.worksheet.Cells(1, 8).Value = formateur_name
@@ -105,7 +109,7 @@ class ExcelFile:
                 self.worksheet.Copy(Before=new_workbook.Sheets(1))
             
             # Save the new workbook
-                new_workbook.SaveAs(target_path, FileFormat=52)
+                new_workbook.SaveAs(target_path, FileFormat=52, ConflictResolution=2)
                 new_workbook.Close(SaveChanges=True)
                 print(f"Saved worksheet as new file: {target_path}")
 
@@ -194,6 +198,7 @@ class ExcelFile:
     def create_modules(self, path = os.getenv("ALYFDEVPATH")):
             #cette methode permettra de recuperer toutes les infos du module
             #On récupère les modules
+          
           
            print("in create module")
 
@@ -479,6 +484,9 @@ class ExcelFile:
 
 
     def retrieve_instructor_list(self, sheetName):
+          
+          self.excel.visible = False
+          # self.excel.DisplayAlerts = False
          
 
           if cache.get("master_excel_file") != None:
