@@ -51,7 +51,7 @@ def build_schedule_files_for_formateurs():
          excelfile = ExcelFile()
          
          excelfile.open_worksheet("DEV WEB", alyfmasterfile)
-         print(excelfile.open_worksheet("DEV WEB"))
+   
          temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsm').name
          directory_of_individual_instructor_sheet_in_temp_storage[formateur] = temp_file
          excelfile.save_instructor_sheet_separately(formateur.get_last_name(), temp_file)

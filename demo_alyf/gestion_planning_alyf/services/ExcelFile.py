@@ -41,10 +41,11 @@ class ExcelFile:
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH") ):
            
            # self.EXCEL.Visible = True 
-            self.excel.Visible = True
+            self.excel.Visible = False
+            self.excel.DisplayAlerts = False
         
            # if self.EXCEL.Visible == True :s
-            if self.excel.Visible == True:
+            if self.excel.Visible == False:
                    print("excel is visible")
                   
                                 
@@ -74,6 +75,8 @@ class ExcelFile:
                         #self.EXCEL.Quit()
                         self.excel.Quit()
                         exit(1)
+                
+                         
 
                     
                     

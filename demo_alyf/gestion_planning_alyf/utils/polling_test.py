@@ -34,7 +34,7 @@ def get_http_file_metadata(url, interval=30):
                         print("changes incoming!")
 
                         upload_excelfile_to_temp()
-                        verifyallformateurs(["Ziani"])
+                        verifyallformateurs()
                         
                         
                         #a la fin de cette etape, nous devrions avoir le nouveau fichier excel stocké sur notre serveur
