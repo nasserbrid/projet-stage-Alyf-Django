@@ -218,19 +218,19 @@ class Module:
             'modules_a_venir': self.__modules_a_venir
         }
 
-    @classmethod
-    def from_dict(cls, data):
-        module = cls(
-            data['nom_module'],
-            datetime.fromisoformat(data['date_debut']),
-            datetime.fromisoformat(data['date_fin']),
-            data['session'],
-            data['modules_termines'],
-            data['modules_a_venir']
-        )
-        # Re-assign the id if needed since it's a private variable
-        module._Module__id_module = uuid.UUID(data['id_module'])
-        return module
+#     @classmethod
+#     def from_dict(cls, data):
+#         module = cls(
+#             data['nom_module'],
+#             datetime.fromisoformat(data['date_debut']),
+#             datetime.fromisoformat(data['date_fin']),
+#             data['session'],
+#             data['modules_termines'],
+#             data['modules_a_venir']
+#         )
+#         # Re-assign the id if needed since it's a private variable
+#         module._Module__id_module = uuid.UUID(data['id_module'])
+#         return module
 
 
     def getInfo(self):

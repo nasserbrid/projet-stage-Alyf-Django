@@ -1,7 +1,6 @@
 import json
 import win32com.client
 import time
-# importing os module for environment variables
 import os
 from . import Module
 import pandas as pd
@@ -17,22 +16,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 # Initialiser Django
 django.setup()
 
-# importing necessary functions from dotenv library
+
 from dotenv import load_dotenv, dotenv_values 
-# loading variables from .env file
+
 load_dotenv() 
 
 
 
 
 class ExcelFile:
-#     EXCEL = win32com.client.Dispatch("Excel.Application")
-   # EXCEL.DisplayAlerts = False attempting to overwrite without notification
-    def __init__(self, workbook= None , worksheet= None, macro = None):
+
+    def __init__(self, workbook= None , worksheet= None):
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
-        self.macro = macro
+      
         
        
         
@@ -40,13 +38,13 @@ class ExcelFile:
 
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH") ):
            
-           # self.EXCEL.Visible = True 
+          
             self.excel.Visible = False
             self.excel.DisplayAlerts = False
         
-           # if self.EXCEL.Visible == True :s
+        
             if self.excel.Visible == False:
-                   print("excel is visible")
+                   #print("excel is visible")
                   
                                 
                    try:
@@ -54,25 +52,25 @@ class ExcelFile:
                        # self.workbook = self.EXCEL.Workbooks.Open("C:\\Users\\nasse\\projet-stage-Alyf\\Test-fichier-excel\\alyfData.xlsm")
                        
                         self.workbook = self.excel.Workbooks.Open(path)
-                        print("hello")
-                        print(self.workbook.Sheets)
+                      
+                        # print(self.workbook.Sheets)
                 
                         self.worksheet = self.workbook.Sheets(sheetName)
                         
 
-                        print(self.workbook)
+                        # print(self.workbook)
                       
                    except FileNotFoundError:
                          print("Le fichier Excel est introuvable.")
                          
-                        # self.EXCEL.Quit()
+                      
                          self.excel.Quit()
 
                          exit(1)
                    except Exception as e:
                         print('La feuille "DEV WEB" est introuvable:', e)
                         self.workbook.Close(SaveChanges=False)
-                        #self.EXCEL.Quit()
+                       
                         self.excel.Quit()
                         exit(1)
                 
@@ -81,7 +79,7 @@ class ExcelFile:
                     
                     
 
-    def get_formateur_worksheet(self, formateur_name):
+    def save_formateur_worksheet(self, formateur_name):
          
           
           self.worksheet.Cells(1, 8).Value = formateur_name
@@ -89,14 +87,14 @@ class ExcelFile:
           self.workbook.SaveAs(os.getenv("ALYFDEVPATH"))
           
           self.workbook.Close(SaveChanges=True)
-        
-          #self.EXCEL.Quit()
-       
 
           self.excel.Quit()
     
 
     def save_instructor_sheet_separately(self, formateur_name, target_path):
+            
+            self.excel.visible = False
+            self.excel.DisplayAlerts = False
             try:
             # Set the formateur name in the worksheet
                 self.worksheet.Cells(1, 8).Value = formateur_name
@@ -145,12 +143,7 @@ class ExcelFile:
                    df = pd.read_excel(excel_path, sheet_name="DEV WEB", header=None, usecols=[i, i+1, i+2], skiprows=3, index_col=None)
                    df = df.fillna('')
                                            
-           # Convertir les objets datetime en chaînes de caractères
-        #    def convert_dates(value):
-        #         if isinstance(value, datetime):
-        #             return value.strftime("%Y-%m-%d %H:%M:%S")
-        #         return value
-       
+          
            
            # Renommer les colonnes de df2 pour qu'elles correspondent à celles de df1
                    df.columns = df_fullYearTeachingData.columns
@@ -175,37 +168,18 @@ class ExcelFile:
            print(df_fullYearTeachingData)
            return df_fullYearTeachingData
            
-       # Récupération des modules
-                   #print(f"les valeurs unique sont :{df_fullYearTeachingData[1].unique()}")
-        
-           """Cette partie est à l'utilisation de la classe Calendar_Planning   
-        # # Convertir le DataFrame en JSON
-        #    df_fullYearTeachingData = df_fullYearTeachingData.to_dict(orient='records')
-        #    #print(df1[0].keys())
-
-
-        # # Sauvegarder les données au format JSON
-        #    with open(output_path, 'w', encoding='utf-8') as json_file:
-        #            json.dump(df_fullYearTeachingData, json_file, ensure_ascii=False, indent=4, default="str")
-        #            print(f"Les données ont été exportées avec succès vers {output_path}")
-           """          
-     
-     #Pour des raisons de lisibilité, nous utiliserons une autre méthode pour transformer nos données en JSON.            
+         
 
     def create_modules(self, path = os.getenv("ALYFDEVPATH")):
             #cette methode permettra de recuperer toutes les infos du module
             #On récupère les modules
+          
           
            print("in create module")
 
            print(path)
             
            df  = self.create_fullYearTeachingDataFrame_from_instructorSheet(path)
-
-           
-         
-          
-           
 
            liste_de_cours = df[1].unique()
            liste_de_cours= list(filter(len, liste_de_cours))
@@ -480,6 +454,9 @@ class ExcelFile:
 
 
     def retrieve_instructor_list(self, sheetName):
+          
+          self.excel.visible = False
+          # self.excel.DisplayAlerts = False
          
 
           if cache.get("master_excel_file") != None:
@@ -506,8 +483,7 @@ class ExcelFile:
         return ' '.join(parts[:split_point]), ' '.join(parts[split_point:])
     
 
-    def test(self):
-      return 'blue'
+   
 # Assuming you have a DataFrame named 'df' with a column 'full_name'
 
 

@@ -29,6 +29,7 @@ def createallusers():
 
     for instructor in instructors:
         User.objects.create_user(instructor[2], instructor[0], instructor[1])
+       
         print("....")
     
 
@@ -38,8 +39,9 @@ def createallusers():
 
 
 def setadmins():
+    groupe, created = Group.objects.get_or_create(name="administrateur")
 
-    groupe = Group.objects.get(name="administrateur")
+    # groupe = Group.objects.get(name="administrateur")
 
     listeadmin = [("OMARI","youssef.omari@alyfpro.fr" ), ("BLANCHARD", "jolan.blanchard@alyfpro.fr"),("BLANCHARD", "quentin.blanchard@alyfpro.fr"),("BEN CHIKHA", "soukeina.benchikha@alyfpro.fr") ]
 
@@ -60,5 +62,6 @@ def setadmins():
 # user1 = User.objects.create_user("john", "lennon@thebeatles.com", "johnpassword")
 
 
+createallusers()
 
 setadmins()
