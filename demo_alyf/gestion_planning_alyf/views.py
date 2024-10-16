@@ -24,6 +24,8 @@ from django.contrib.auth.models import User
 #from django.contrib.auth.views import LoginView
 from .models import *
 from django.contrib.messages import get_messages
+from django.core.exceptions import PermissionDenied
+
 import sys
 import logging
 import os
@@ -38,27 +40,6 @@ logger = logging.getLogger(__name__)
 
 
 
-
-
-# def home(request):
-     
-#      if request.user.is_authenticated:
-
-#         def is_member(user):
-#              return user.groups.filter(name='admin').exists()
-
-        
-
-#         @user_passes_test(is_member)
-#         def redirect_to_selectformateur(request):
-
-#          return redirect("selectformateur/")
-
-    
-        
-#         return redirect("selectformateur/")
-  
-#      return render(request, 'home.html')
 
 def is_admin(user):
     return user.groups.filter(name='administrateur').exists()
@@ -75,17 +56,29 @@ def home(request):
         # Si l'utilisateur n'est pas authentifié, on retourne à la page d'accueil
         return render(request, 'home.html')
 
-
+@login_required
 def selectformateur(request):
 
-    pythoncom.CoInitialize()
-    excel = ExcelFile()
-    selectvalues = excel.retrieve_instructor_list("FORMATEURS - MODULES")
-    names = []
-    for instructor in selectvalues:
-        names.append(instructor[2])
+    if not is_admin(request.user):
+         raise PermissionDenied
+    
 
-    print(selectvalues)
+    if cache.get("liste_formateurs_selecteur") == None:
+
+
+        pythoncom.CoInitialize()
+
+        excel = ExcelFile()
+        selectvalues = excel.retrieve_instructor_list("FORMATEURS - MODULES")
+        names = []
+        for instructor in selectvalues:
+            names.append(instructor[2])
+        
+        cache.set("liste_formateurs_selecteur", names)
+        
+
+    else:
+         names = cache.get("liste_formateurs_selecteur")
         
     return render(request, "selectformateur.html", {"selectvalues":names})
 
@@ -173,7 +166,7 @@ class CalendarView(View):
         if cache_key in cache:
             #  print(self.request.session['modules'])
             #  serialized_data = self.request.session['modules']
-             data_from_excel_file = cache.get(cache_key)
+             cached_modules_from_excel_file = cache.get(cache_key)
              #print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
              print("found instructor in cache")
              
@@ -186,25 +179,25 @@ class CalendarView(View):
                 file = cache.get("master_excel_file")
                 test_excel_file = ExcelFile()
                 test_excel_file.open_worksheet("DEV WEB", file)
-                test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
+                test_excel_file.save_formateur_worksheet(instructor.get_last_name()) 
                 modules = test_excel_file.create_modules(file)
                 cache.set(cache_key, modules)
-                data_from_excel_file = cache.get(cache_key)
-                print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+                cached_modules_from_excel_file = cache.get(cache_key)
+                print(f"serialized_data : {cached_modules_from_excel_file}", type(cached_modules_from_excel_file))
             else:
                 test_excel_file = ExcelFile()
                 test_excel_file.open_worksheet("DEV WEB")
-                test_excel_file.get_formateur_worksheet(instructor.get_last_name()) 
+                test_excel_file.save_formateur_worksheet(instructor.get_last_name()) 
                 modules = test_excel_file.create_modules()
                 cache.set(cache_key, modules)
-                data_from_excel_file = cache.get(cache_key)
-                print(f"serialized_data : {data_from_excel_file}", type(data_from_excel_file))
+                cached_modules_from_excel_file = cache.get(cache_key)
+                print(f"serialized_data : {cached_modules_from_excel_file}", type(cached_modules_from_excel_file))
 
             
             
         
          # Ajouter des événements au calendrier en fonction des données Excel
-        calendrier_test.dictionaries_module_to_calendar(data_from_excel_file)
+        calendrier_test.dictionaries_module_to_calendar(cached_modules_from_excel_file)
         html_cal = calendrier_test.formatmonth(d.month)
 
         # Ajout du calendrier HTML au contexte
@@ -308,16 +301,18 @@ class CalendarDetailView(DetailView):
             return render(request, "module_details.html",dicocontext)     
 
 
-def personalspace(request):
+# def personalspace(request):
      
-     if  request.user.is_authenticated:
-        print(request.user)
-        messages.success(request, "the dinosaur codes better than you do!")
+#      if  request.user.is_authenticated:
+#         print(request.user)
+#         messages.success(request, "the dinosaur codes better than you do!")
 
       
         
         
-        return render(request, 'personal.html')
+#         return render(request, 'personal.html')
+
+# A VOIR POUR V2? 
      
           
           

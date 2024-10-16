@@ -18,9 +18,13 @@ def get_http_file_metadata(url, interval=60):
 
     print("hello world i am running in the get http metadata function")
 
+  
+        
+
+
     response = requests.head(url)
     
-  
+    print(response.__dict__)
 
     last_mod_time = response.headers.get('Last-Modified')
 
@@ -56,8 +60,8 @@ def get_http_file_metadata(url, interval=60):
              
 
 
-
-    return current_mod_time 
+    
+    return current_mod_time
 
 # URL of the file
 url = 'http://localhost:8080/alyf.xlsm'

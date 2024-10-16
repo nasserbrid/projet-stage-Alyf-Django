@@ -1,7 +1,7 @@
 import json
 import win32com.client
 import time
-# importing os module for environment variables
+
 import os
 from . import Module
 import pandas as pd
@@ -11,13 +11,14 @@ from django.core.cache import cache
 
 import django
 
-# Définir la variable d'environnement DJANGO_SETTINGS_MODULE
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 
-# Initialiser Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 django.setup()
 
-# importing necessary functions from dotenv library
+# Ces lignes définissent d'abord la variable d'environnement pour spécifier le fichier de configuration Django à utiliser (settings.py). Ensuite, elles initialisent Django pour rendre ses #  #fonctionnalités disponibles dans le script.
+#permet d'initialiser l'environnement django, 
+
+
 from dotenv import load_dotenv, dotenv_values 
 # loading variables from .env file
 load_dotenv() 
@@ -26,27 +27,26 @@ load_dotenv()
 
 
 class ExcelFile:
-#     EXCEL = win32com.client.Dispatch("Excel.Application")
-   # EXCEL.DisplayAlerts = False attempting to overwrite without notification
-    def __init__(self, workbook= None , worksheet= None, macro = None):
+
+    def __init__(self, workbook= None , worksheet= None):
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
-        self.macro = macro
+        
         
        
         
         
 
-    def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH") ):
+    def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH")):
            
-           # self.EXCEL.Visible = True 
+        
             self.excel.Visible = False
             self.excel.DisplayAlerts = False
         
-           # if self.EXCEL.Visible == True :s
+       
             if self.excel.Visible == False:
-                   print("excel is visible")
+                  # print(f"excel is {self.excel.Visible}")
                   
                                 
                    try:
@@ -54,18 +54,18 @@ class ExcelFile:
                        # self.workbook = self.EXCEL.Workbooks.Open("C:\\Users\\nasse\\projet-stage-Alyf\\Test-fichier-excel\\alyfData.xlsm")
                        
                         self.workbook = self.excel.Workbooks.Open(path)
-                        print("hello")
-                        print(self.workbook.Sheets)
+                       
+                        # print(self.workbook.Sheets)
                 
                         self.worksheet = self.workbook.Sheets(sheetName)
                         
 
-                        print(self.workbook)
+                        # print(self.workbook)
                       
                    except FileNotFoundError:
                          print("Le fichier Excel est introuvable.")
                          
-                        # self.EXCEL.Quit()
+                        
                          self.excel.Quit()
 
                          exit(1)
@@ -81,25 +81,23 @@ class ExcelFile:
                     
                     
 
-    def get_formateur_worksheet(self, formateur_name):
+    def save_formateur_worksheet(self, formateur_name):
          
           
           self.worksheet.Cells(1, 8).Value = formateur_name
        
-          self.workbook.SaveAs(os.getenv("ALYFDEVPATH"), ConflictResolution=2)
+          self.workbook.SaveAs(os.getenv("ALYFDEVPATH"))
+          #removed ConflictResolution=2
           
           self.workbook.Close(SaveChanges=True)
         
-          #self.EXCEL.Quit()
-       
-
           self.excel.Quit()
     
 
     def save_instructor_sheet_separately(self, formateur_name, target_path):
             
             self.excel.visible = False
-            # self.excel.DisplayAlerts = False
+            self.excel.DisplayAlerts = False
             try:
             # Set the formateur name in the worksheet
                 self.worksheet.Cells(1, 8).Value = formateur_name
@@ -107,9 +105,11 @@ class ExcelFile:
             # Copy the worksheet to a new workbook
                 new_workbook = self.excel.Workbooks.Add()
                 self.worksheet.Copy(Before=new_workbook.Sheets(1))
+                # A FAIRE enlever le sheet1 des fichiers de planning individuels
             
-            # Save the new workbook
-                new_workbook.SaveAs(target_path, FileFormat=52, ConflictResolution=2)
+           
+                new_workbook.SaveAs(target_path, FileFormat=52)
+                #removed conflict res  ConflictResolution=2
                 new_workbook.Close(SaveChanges=True)
                 print(f"Saved worksheet as new file: {target_path}")
 
@@ -125,11 +125,11 @@ class ExcelFile:
     def create_fullYearTeachingDataFrame_from_instructorSheet(self, path = os.getenv("ALYFDEVPATH") ):
            
            excel_path = path
-           print(path)
+           #print(path)
            
            #output_path = os.getenv("ALYFJSONPATH")
                
-           print("in create full year Teaching")
+          # print("in create full year Teaching")
            try:
                   i=0 
                   df_fullYearTeachingData = pd.read_excel(excel_path, sheet_name="DEV WEB", header=None,  usecols=[i,i+1,i+2], skiprows=3, index_col=None)
@@ -148,12 +148,7 @@ class ExcelFile:
                    df = pd.read_excel(excel_path, sheet_name="DEV WEB", header=None, usecols=[i, i+1, i+2], skiprows=3, index_col=None)
                    df = df.fillna('')
                                            
-           # Convertir les objets datetime en chaînes de caractères
-        #    def convert_dates(value):
-        #         if isinstance(value, datetime):
-        #             return value.strftime("%Y-%m-%d %H:%M:%S")
-        #         return value
-       
+
            
            # Renommer les colonnes de df2 pour qu'elles correspondent à celles de df1
                    df.columns = df_fullYearTeachingData.columns
@@ -171,58 +166,31 @@ class ExcelFile:
 
       # Affichage du résultat
                    pd.set_option('display.max_rows', None)
-           #print(concat)
+         
                    df_fullYearTeachingData.dropna(subset=[0],  inplace= True)
                    #df_fullYearTeachingData = df_fullYearTeachingData.map(convert_dates)
-          # print(df_fullYearTeachingData)
+       
            print(df_fullYearTeachingData)
            return df_fullYearTeachingData
            
        # Récupération des modules
                    #print(f"les valeurs unique sont :{df_fullYearTeachingData[1].unique()}")
         
-           """Cette partie est à l'utilisation de la classe Calendar_Planning   
-        # # Convertir le DataFrame en JSON
-        #    df_fullYearTeachingData = df_fullYearTeachingData.to_dict(orient='records')
-        #    #print(df1[0].keys())
-
-
-        # # Sauvegarder les données au format JSON
-        #    with open(output_path, 'w', encoding='utf-8') as json_file:
-        #            json.dump(df_fullYearTeachingData, json_file, ensure_ascii=False, indent=4, default="str")
-        #            print(f"Les données ont été exportées avec succès vers {output_path}")
-           """          
-     
-     #Pour des raisons de lisibilité, nous utiliserons une autre méthode pour transformer nos données en JSON.            
-
+ 
+    
     def create_modules(self, path = os.getenv("ALYFDEVPATH")):
             #cette methode permettra de recuperer toutes les infos du module
-            #On récupère les modules
-          
-          
-           print("in create module")
+            # print("in create module")
 
-           print(path)
-            
            df  = self.create_fullYearTeachingDataFrame_from_instructorSheet(path)
-
-           
-         
-          
-           
-
            liste_de_cours = df[1].unique()
            liste_de_cours= list(filter(len, liste_de_cours))
            print(liste_de_cours)
 
-           #need to have a method specifically designed to get all Indisponibilités for an instructor
+           # A FAIRE need to have a method specifically designed to get all Indisponibilités for an instructor
            if "Indisponible" in liste_de_cours :
                  liste_de_cours.remove("Indisponible")
-           
-              
-          # print(f"liste de cours: {liste_de_cours}")
-
-           #print(f"{liste_de_cours} liste de cours")
+           print(f"{liste_de_cours} liste de cours")
            dico_module = {}
            
            for cours in liste_de_cours:
@@ -233,14 +201,12 @@ class ExcelFile:
                   #print(f"datesindex: {dates}")
                   dates_vals = []
                   for date in dates:
-                         print(type(date))
+                        # print(type(date))
                          dates_vals.append(date)
                  # print(f" dates_vals: {dates_vals} ")
                  # print(f"vérification de dates_vals : {dates_vals}")
 
                   blocks = [[dates_vals[0]]]
-
-                
 
                   for i in range(1,len(dates_vals)):
                            if dates_vals[i] - dates_vals[i-1] == 1:
@@ -262,9 +228,6 @@ class ExcelFile:
                              #modkey = j
                              dico_module[cours][j] = Module.Module(df[1].iloc[blocks[0][0]], df[0].iloc[blocks[j][0]], 
                                                   df[0].iloc[blocks[j][-1]],df[2].iloc[blocks[0][0]],[],[])
-                             
-                             
-                             
                              
 
                              listecoursterminesetfuturs = self.create_list_cours_termines_et_futur( dico_module[cours][j].get_nom_module(),
@@ -375,7 +338,7 @@ class ExcelFile:
     def find_session_type(self, session_name):
             
 
-    # Define a dictionary with keywords as keys and corresponding session names as values
+    
       keywords = {
         "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],
         "Sessions Alternantes": ["ALT", "alt", "Alt"],
@@ -468,6 +431,8 @@ class ExcelFile:
              print(f"Erreur: {module_name} n'est pas dans unique_units.")
              return [], []
           
+          #A VERIFIER, le code sur la ligne 430 et dessous permettent de gerer les valeurs comme jours fériés, etc qu'on trouve qu'on trouve dans les cellules du fichier excel
+          
                 
           index_current_module  = unique_units.index(module_name)
         #   print(index_current_module)
@@ -513,8 +478,7 @@ class ExcelFile:
         return ' '.join(parts[:split_point]), ' '.join(parts[split_point:])
     
 
-    def test(self):
-      return 'blue'
+   
 # Assuming you have a DataFrame named 'df' with a column 'full_name'
 
 

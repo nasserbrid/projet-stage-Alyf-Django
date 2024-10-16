@@ -7,7 +7,7 @@ urlpatterns = [
      path('moduledetails/<uuid:module_id>/', CalendarDetailView.as_view(), name='moduleinfo'),  
     #  path('login/', MyLoginView.as_view(), name='login_page'),
      path('home',views.home, name='home'),
-     path("personal", views.personalspace, name = "perso"),
+     #path("personal", views.personalspace, name = "perso"),
      path("selectformateur/", views.selectformateur, name = "selectformateur"),
      path("telecharger/<str:file>/", views.telecharger_document, name= "telecharger_document")
      
