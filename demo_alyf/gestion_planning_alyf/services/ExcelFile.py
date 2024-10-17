@@ -25,18 +25,13 @@ load_dotenv()
 
 
 
-
 class ExcelFile:
 
     def __init__(self, workbook= None , worksheet= None):
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
-        
-        
-       
-        
-        
+          
 
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH")):
            
@@ -75,11 +70,7 @@ class ExcelFile:
                         #self.EXCEL.Quit()
                         self.excel.Quit()
                         exit(1)
-                
-                         
-
-                    
-                    
+                             
 
     def save_formateur_worksheet(self, formateur_name):
          

@@ -26,6 +26,9 @@ from .models import *
 from django.contrib.messages import get_messages
 from django.core.exceptions import PermissionDenied
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import never_cache
+
 import sys
 import logging
 import os
@@ -57,6 +60,7 @@ def home(request):
         return render(request, 'home.html')
 
 @login_required
+@ never_cache
 def selectformateur(request):
 
     if not is_admin(request.user):
@@ -82,7 +86,8 @@ def selectformateur(request):
         
     return render(request, "selectformateur.html", {"selectvalues":names})
 
-
+@login_required
+@never_cache
 def telecharger_document(request, file):
         # f = Document.objects.filter(id = id).first()
         # files = cache.get("dict_sheets_temp_storage")
@@ -102,9 +107,12 @@ def telecharger_document(request, file):
                 return response
             # else:
             #  raise Http404      
-    
 
-class CalendarView(View):
+
+
+
+
+class CalendarView(LoginRequiredMixin,View):
     
     
     
@@ -208,6 +216,7 @@ class CalendarView(View):
         context['next_month'] = self.next_month(d)
 
         context['username'] = mark_safe(self.request.user.username)
+        context['current_formateur'] = instructor_name
         
         files = cache.get("dict_sheets_temp_storage")
         print(f"{files}: files values")
@@ -277,7 +286,7 @@ class CalendarView(View):
     #     #      raise Http404
      
   
-class CalendarDetailView(DetailView):    
+class CalendarDetailView(LoginRequiredMixin,DetailView):    
       def find_module_by_id(self, module_id, dico): 
           for key in dico:                
               for k in dico[key]:
@@ -299,6 +308,8 @@ class CalendarDetailView(DetailView):
             dicocontext = {}       
             dicocontext["module_dict"] = dico       
             return render(request, "module_details.html",dicocontext)     
+      
+    
 
 
 # def personalspace(request):

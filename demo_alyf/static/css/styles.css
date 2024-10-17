@@ -1,8 +1,13 @@
 /* Common styles */
 body {
   font-family: "ptsans", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: deepskyblue;
+ 
+  background:url(../images/escherlikealyfbg_test.jpg) ;
+ 
 }
+
+
+
 
 .left {
   float: left;
@@ -18,6 +23,7 @@ body {
   background-color: transparent;
   box-shadow: 0 0 0 0;
   margin-right: 3px;
+  background-color: white;
 }
 
 .clearfix {
@@ -43,12 +49,14 @@ body {
 .title {
   text-align: center;
   margin: 10px;
+  ;
 }
 
 .calendar {
   width: 98%;
   margin: auto;
   font-size: 13px;
+  margin-top: 75px;
 }
 
 .calendar tr,
@@ -60,6 +68,8 @@ body {
   padding: 10px;
   text-align: center;
   font-size: 18px;
+  background-color:black;
+  color: #1da0c5
 }
 
 .calendar td {
@@ -70,10 +80,14 @@ body {
 
 .month {
   font-size: 25px;
+  color: #1da0c5;
 }
 
 .date {
-  font-size: 16px;
+  font-size: 16px ;
+  font-weight: bolder;
+  color:#1da0c5
+
 }
 
 ul {
@@ -82,6 +96,47 @@ ul {
 }
 
 a {
-  color: #17a2b8;
+  color: white;
 }
 
+h1{
+  color:white;
+}
+
+.aveccours{
+  background-color: black;
+  font-weight: bold;
+  opacity:0.80;
+  color:white
+}
+
+.sanscours{
+  background-color: black;
+  opacity:0.8;
+}
+
+.notinmonth{
+  background-color: grey;
+  opacity: 0.3;
+}
+
+
+
+
+.calbtn{
+  background-color: black;
+  opacity: 1;
+  font-weight: bold;
+  color:white;
+  /* margin-right: 1px; */
+  position: relative;
+  left: 22px;
+
+}
+
+.btn btn-link nav-link{
+  position: relative;
+  left: 2200px;
+  
+
+}

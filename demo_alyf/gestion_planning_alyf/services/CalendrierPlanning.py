@@ -94,8 +94,6 @@ class Calendar(HTMLCalendar):
             self.add_event(int(date[5:7]), int(date[8:10]), {"id_module":module.get_id_module(), "nom_module":module.get_nom_module()})
 
        
-     
-     
     def formatday(self, day, month):
         if day != 0:
             events = self.get_events_for_day(month, day)
@@ -107,11 +105,35 @@ class Calendar(HTMLCalendar):
                 url = reverse('moduleinfo', args=[event['id_module']])
                 d += f'<li><a href="{url}">  {event["nom_module"]}</a></li>'
                 # d += f'<li><a href="{request.build_absolute_uri(reverse("calendar_detail", kwargs={"id_module": event["id_module"]}))}"> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</a></li>'
-
-            return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
+            if len(d) > 1:
+                return f"<td class = 'aveccours' ><span class='date'>{day}</span><ul> {d} </ul></td>"
+            else:
+                return f"<td class = 'sanscours' ><span class='date'>{day}</span><ul> {d} </ul></td>"
+                
          
           
-        return '<td></td>'
+        return '<td class="notinmonth"></td>'
+     
+    # def formatday(self, day, month):
+    #     if day != 0:
+    #         events = self.get_events_for_day(month, day)
+            
+    #         d = ''
+            
+    #         for event in events:
+    #             print(event)
+    #             url = reverse('moduleinfo', args=[event['id_module']])
+    #             d += f'<li><a href="{url}">  {event["nom_module"]}</a></li>'
+    #             # d += f'<li><a href="{request.build_absolute_uri(reverse("calendar_detail", kwargs={"id_module": event["id_module"]}))}"> (id_module : {event["id_module"]}), (nom_module : {event["nom_module"]})</a></li>'
+    #             if len(d)>=10:
+
+    #                 return f"<td class ='aveccours'><span class='date'>{day}</span><ul> {d} </ul></td>"
+                
+    #             else:
+    #                 return f"<td class ='sanscours'><span class='date'>{day}</span><ul> {d} </ul></td>"
+         
+          
+    #     return '<td></td>'
         	
         
             
@@ -142,6 +164,7 @@ class Calendar(HTMLCalendar):
     def formatmonth(self, month, withyear=True):
         
         gestion_planning_alyf = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
+        
         gestion_planning_alyf += f'{self.formatmonthname(self.year, month, withyear=withyear)}\n'
         gestion_planning_alyf += f'{self.formatweekheader()}\n'
         

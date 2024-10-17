@@ -49,7 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+CACHE_MIDDLEWARE_SECONDS = 0
 
 ROOT_URLCONF = 'demo_alyf.urls'
 
@@ -69,8 +73,10 @@ TEMPLATES = [
     },
 ]
 
-LOGIN_REDIRECT_URL = 'home'  # Remplacez 'home' par le nom de votre page d'accueil
+LOGIN_REDIRECT_URL = 'home' 
+# Remplacez 'home' par le nom de votre page d'accueil
 LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL= 'login' 
 
 
 # AUTHENTICATION_BACKENDS = [

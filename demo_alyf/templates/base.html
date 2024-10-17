@@ -33,7 +33,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Django Calendar</a>
+      <a class="navbar-brand" href="#">Alyf Planning App</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -47,15 +47,23 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
+          {% if user.is_authenticated %}
+      <li class="nav-item">
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">Logout</button>
+        </form>
+        
+        
+      </li>
+      <li class="nav-item">
+        <h3> {{request.user.username}}</h3>
+      </li>
+          {% endif %}
+   
+  
+         
+         
         </ul>
       </div>
     </nav>
