@@ -328,7 +328,6 @@ class ExcelFile:
      
     def find_session_type(self, session_name):
             
-
     
       keywords = {
         "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],

@@ -137,6 +137,46 @@ h1{
 .btn btn-link nav-link{
   position: relative;
   left: 2200px;
+  background-color: black;
   
+}
+
+h2 {
+  padding-left:38%;
+  width: 98%;
+  left:10px;
+  position:relative;
+ 
+  top:75px;
+  background-color: black;
+  color:  #1da0c5;
+
+
+}
+
+.module-detail-table{
+  position:relative;
+  top:300px;
+  background-color: white ;
+  opacity: 0.90;
+}
+
+.module-detail-table {
+  position:relative;
+  top:300px;
+  background-color: white ;
+  opacity: 0.90;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.module-detail  {
+  position:relative;
+  padding-left:38%;
+  background-color: white;
+  opacity: 0.9 ;
+  top:309px;
+  left:0px;
+  color:  #1da0c5;
 
 }

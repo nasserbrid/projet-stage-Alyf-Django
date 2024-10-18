@@ -7,6 +7,7 @@ import os
 import tempfile
 import pathlib as pl
 import pandas as pd
+import re
 
 
 #
@@ -99,7 +100,110 @@ class TestExcelFile(unittest.TestCase):
           self.assertGreater(used_range.Columns.Count, 10)
          
           self.assertTrue(isinstance(df, pd.DataFrame))
+
+        
+    def test_create_modules(self):
+
+        #Arrange 
+          excel = ExcelFile()
+          excel.open_worksheet("DEV WEB")
+          excel_path = os.getenv("ALYFDEVPATH")
+          path = pl.Path(excel_path)
+          #df = excel.create_fullYearTeachingDataFrame_from_instructorSheet(path)
+
+        #Act
+          dicoval = excel.create_modules()
+        #Assert
+         # self.assertTrue(isinstance(liste_de_cours, list))
+          self.assertTrue(isinstance(dicoval, dict))
+
+    
+    def test_find_session_type(self):
+         #Arrange 
+         excel = ExcelFile()
+   
+
+         #Act
+         session_name = "Sessions Alternantes"
+         session_type = excel.find_session_type(session_name)
+
+         #Assert
+         self.assertTrue(isinstance(session_name, str))
+         self.assertTrue(isinstance(session_type, str))
+
+    
+    def test_get_session_dataframe(self):
+         #Arrange 
+        excel = ExcelFile()
+        excel.open_worksheet("DEV WEB")
+        excel.save_formateur_worksheet("Huynh")
+        
+         #Act
+        correct_values_sheetname = ["Isitech - XEFI",  "Sessions Alternantes"]
+        incorrect_values_sheetname = ["dsfjksdfj", "isitech"]
+        correct_values_session_name = ["TSSR LY7 14102024 - ALT"]
+        incorrect_values_session_name = ["sqdksqkd"]
+
+        df1 =  excel.get_session_dataframe(correct_values_sheetname[1], correct_values_session_name[0])
+       # df2 =  excel.get_session_dataframe(correct_values_sheetname[0], correct_values_session_name[0])
+
+        #Assert
+        self.assertTrue(isinstance(df1, pd.DataFrame))
+        self.assertRaises(IndexError, excel.get_session_dataframe, correct_values_sheetname[0], correct_values_session_name[0])
+
+
+
+    def test_create_list_cours_termines_et_futur(self):
+         #Arrange
+         excel = ExcelFile()
+         excel.open_worksheet("DEV WEB")
+
+         #Act
+         correct_values_modulename = ["Scripting PowerShell", "Déploiement"]
+         correct_values_sheetname = ["Isitech - XEFI",  "Sessions Alternantes", "Sessions Continues"]
+         correct_values_session_name = ["PRF-TSSR AVIGNON 291123", "TSSR POLE EMPLOI ISI 041223 "]
+         liste1 = excel.create_list_cours_termines_et_futur(correct_values_modulename[1], correct_values_sheetname[2], correct_values_session_name[0])
+         liste2 = excel.create_list_cours_termines_et_futur(correct_values_modulename[0], correct_values_sheetname[2], correct_values_session_name[0])
+
+         #Assert
+         self.assertTrue(isinstance(liste1, tuple))
+         self.assertTrue(isinstance(liste2, tuple))
+         #self.assertRaises(IndexError, correct_values_modulename[1] , correct_values_sheetname[0], correct_values_session_name[0])
+        
+
+    def test_retrieve_instructor_list(self):
+         #Arrange 
+         excel = ExcelFile()
+         email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+      
+
+         #Act 
+         instructors =  excel.retrieve_instructor_list("FORMATEURS - MODULES")
+         print(instructors)
+
+
+         #Assert
+         self.assertTrue(isinstance(instructors, list))
+         for instructor in instructors:
+            email = instructor[0] 
+            self.assertTrue(re.match(email_regex, email))
+            
          
+
+    
+              
+
+
+
+
+
+    
+
+    
+
+
+
+
 
 
     # def test_open_worksheet(self):
