@@ -75,6 +75,10 @@ def update_dico_module_for_instructors(formateurs):
         
         new_modules = excel.create_modules(fileA)
         cache.set(cache_key, new_modules)
+    
+
+
+    print(f"la liste des formateurs pour laquelle une modif a eu lieu est {formateurs}")
 
 
    

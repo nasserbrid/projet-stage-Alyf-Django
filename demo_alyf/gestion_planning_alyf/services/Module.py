@@ -12,7 +12,7 @@ load_dotenv()
 
 
 class Module:
-    def __init__(self, nom_module, date_debut, date_fin,  session, modules_termines, modules_a_venir):
+    def __init__(self, nom_module, date_debut, date_fin, session, modules_termines, modules_a_venir):
          self.__id_module = uuid.uuid4()
          self.__nom_module = nom_module
          self.__date_debut = datetime.strptime(str(date_debut),'%Y-%m-%d %H:%M:%S')
@@ -231,6 +231,8 @@ class Module:
 #         # Re-assign the id if needed since it's a private variable
 #         module._Module__id_module = uuid.UUID(data['id_module'])
 #         return module
+
+# la methode classmethode avait été dev pour recomposer un module a partir d'un objet json, mais on a prit un chemin different
 
 
     def getInfo(self):

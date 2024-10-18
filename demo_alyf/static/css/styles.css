@@ -1,6 +1,6 @@
 Common styles body {
   font-family: "ptsans", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  
+  background-color: deepskyblue;
 }
 
 .left {
@@ -83,3 +83,4 @@ ul {
 a {
   color: #17a2b8;
 }
+
