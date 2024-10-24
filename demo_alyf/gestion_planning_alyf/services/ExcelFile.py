@@ -74,6 +74,7 @@ class ExcelFile:
                         self.excel.Quit()
                         exit(1)
                              
+                             
 
     def save_formateur_worksheet(self, formateur_name):
          
@@ -330,6 +331,7 @@ class ExcelFile:
                     
      
     def find_session_type(self, session_name):
+            
             
     
       keywords = {
