@@ -26,6 +26,9 @@ from .models import *
 from django.contrib.messages import get_messages
 from django.core.exceptions import PermissionDenied
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import never_cache
+
 import sys
 import logging
 from django.core.exceptions import PermissionDenied
@@ -58,6 +61,7 @@ def home(request):
         return render(request, 'home.html')
 
 @login_required
+@ never_cache
 def selectformateur(request):
 
     if not is_admin(request.user):
@@ -83,7 +87,8 @@ def selectformateur(request):
         
     return render(request, "selectformateur.html", {"selectvalues":names})
 
-
+@login_required
+@never_cache
 def telecharger_document(request, file):
         # f = Document.objects.filter(id = id).first()
         # files = cache.get("dict_sheets_temp_storage")
@@ -99,13 +104,16 @@ def telecharger_document(request, file):
                 print(f"{username} : username")
                 
                 response = HttpResponse(data, content_type='application/vnd.ms-excel.sheet.macroEnabled.12')
-                response["Content-Disposition"] = u"attachment; filename={0}".format(username)
+                response["Content-Disposition"] = u"attachment; filename={0}.xlsm".format(username)
                 return response
             # else:
             #  raise Http404      
-    
 
-class CalendarView(View):
+
+
+
+
+class CalendarView(LoginRequiredMixin,View):
     
     
     
@@ -209,6 +217,7 @@ class CalendarView(View):
         context['next_month'] = self.next_month(d)
 
         context['username'] = mark_safe(self.request.user.username)
+        context['current_formateur'] = instructor_name
         
         files = cache.get("dict_sheets_temp_storage")
         print(f"{files}: files values")
@@ -278,7 +287,7 @@ class CalendarView(View):
     #     #      raise Http404
      
   
-class CalendarDetailView(DetailView):    
+class CalendarDetailView(LoginRequiredMixin,DetailView):    
       def find_module_by_id(self, module_id, dico): 
           for key in dico:                
               for k in dico[key]:
@@ -286,7 +295,7 @@ class CalendarDetailView(DetailView):
                       return  dico[key][k]  
                    
       def get(self, request, module_id): 
-            instructeur = self.request.session["current_formateur"]
+            instructeur = self.request.session.get("current_formateur", self.request.user.username)
             print('in the get method')
             print(instructeur)
             cache_key =  f'modules_{instructeur}'      
@@ -300,6 +309,8 @@ class CalendarDetailView(DetailView):
             dicocontext = {}       
             dicocontext["module_dict"] = dico       
             return render(request, "module_details.html",dicocontext)     
+      
+    
 
 
 # def personalspace(request):

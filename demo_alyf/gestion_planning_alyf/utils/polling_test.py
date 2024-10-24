@@ -1,6 +1,8 @@
 
 import requests
 import time
+
+# from .django_relunch import restart_django_app
 from .file_upload_alyf import upload_excelfile_to_temp
 from .verification import verifyallformateurs
 from .caching_dico_modules import update_dico_module_for_instructors
@@ -13,13 +15,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo_alyf.settings')
 # Initialiser Django
 django.setup()
 
+
+
 def get_http_file_metadata(url, interval=60):
  
 
     print("hello world i am running in the get http metadata function")
-
-  
-        
 
 
     response = requests.head(url)
@@ -55,6 +56,7 @@ def get_http_file_metadata(url, interval=60):
 
         except Exception as e:
               print(f"An error occurred: {e}")
+              #restart_django_app()
               break
         
              

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import CalendarView, CalendarDetailView
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
      path('calendar/', CalendarView.as_view(), name='calendar'),
@@ -9,7 +10,8 @@ urlpatterns = [
      path('home',views.home, name='home'),
      #path("personal", views.personalspace, name = "perso"),
      path("selectformateur/", views.selectformateur, name = "selectformateur"),
-     path("telecharger/<str:file>/", views.telecharger_document, name= "telecharger_document")
+     path("telecharger/<str:file>/", views.telecharger_document, name= "telecharger_document"),
+     path("logout/", LogoutView.as_view(), name = "logout")
      
     
      

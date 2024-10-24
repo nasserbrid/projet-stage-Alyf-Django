@@ -8,6 +8,7 @@ import pandas as pd
 from datetime import date
 from datetime import datetime
 from django.core.cache import cache
+import pathlib as pl
 
 import django
 
@@ -25,18 +26,15 @@ load_dotenv()
 
 
 
-
 class ExcelFile:
 
     def __init__(self, workbook= None , worksheet= None):
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
-        
-        
-       
-        
-        
+      #   self.excel.Visible = False
+      #   self.excel.DisplayAlerts = False
+          
 
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH")):
            
@@ -75,11 +73,7 @@ class ExcelFile:
                        
                         self.excel.Quit()
                         exit(1)
-                
-                         
-
-                    
-                    
+                             
 
     def save_formateur_worksheet(self, formateur_name):
          
@@ -337,7 +331,6 @@ class ExcelFile:
      
     def find_session_type(self, session_name):
             
-
     
       keywords = {
         "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],
@@ -458,7 +451,16 @@ class ExcelFile:
                excel_path = cache.get("master_excel_file")
                self.open_worksheet(sheetName, excel_path)
           else:
+            #    path = pl.Path(os.getenv("ALYFDEVPATH"))
+               
+            #    print(path.is_file())
+               
                excel_path = os.getenv("ALYFDEVPATH")
+                
+            
+               
+                
+                
                self.open_worksheet(sheetName)
           
 

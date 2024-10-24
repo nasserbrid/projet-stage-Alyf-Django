@@ -1,7 +1,12 @@
 Common styles body {
   font-family: "ptsans", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background-color: deepskyblue;
+ 
+  background:url(../images/escherlikealyfbg_test.jpg) ;
+ 
 }
+
+
+
 
 .left {
   float: left;
@@ -17,6 +22,7 @@ Common styles body {
   background-color: transparent;
   box-shadow: 0 0 0 0;
   margin-right: 3px;
+  background-color: white;
 }
 
 .clearfix {
@@ -42,12 +48,14 @@ Common styles body {
 .title {
   text-align: center;
   margin: 10px;
+  ;
 }
 
 .calendar {
   width: 98%;
   margin: auto;
   font-size: 13px;
+  margin-top: 75px;
 }
 
 .calendar tr,
@@ -59,6 +67,8 @@ Common styles body {
   padding: 10px;
   text-align: center;
   font-size: 18px;
+  background-color:black;
+  color: #1da0c5
 }
 
 .calendar td {
@@ -69,10 +79,14 @@ Common styles body {
 
 .month {
   font-size: 25px;
+  color: #1da0c5;
 }
 
 .date {
-  font-size: 16px;
+  font-size: 16px ;
+  font-weight: bolder;
+  color:#1da0c5
+
 }
 
 ul {
@@ -81,6 +95,87 @@ ul {
 }
 
 a {
-  color: #17a2b8;
+  color: white;
 }
 
+h1{
+  color:white;
+}
+
+.aveccours{
+  background-color: black;
+  font-weight: bold;
+  opacity:0.80;
+  color:white
+}
+
+.sanscours{
+  background-color: black;
+  opacity:0.8;
+}
+
+.notinmonth{
+  background-color: grey;
+  opacity: 0.3;
+}
+
+
+
+
+.calbtn{
+  background-color: black;
+  opacity: 1;
+  font-weight: bold;
+  color:white;
+  /* margin-right: 1px; */
+  position: relative;
+  left: 22px;
+
+}
+
+.btn btn-link nav-link{
+  position: relative;
+  left: 2200px;
+  background-color: black;
+  
+}
+
+h2 {
+  padding-left:38%;
+  width: 98%;
+  left:10px;
+  position:relative;
+ 
+  top:75px;
+  background-color: black;
+  color:  #1da0c5;
+
+
+}
+
+.module-detail-table{
+  position:relative;
+  top:300px;
+  background-color: white ;
+  opacity: 0.90;
+}
+
+.module-detail-table {
+  position:relative;
+  top:300px;
+  background-color: white ;
+  opacity: 0.90;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.module-detail  {
+  position:relative;
+  padding-left:38%;
+  background-color: white;
+  opacity: 0.9 ;
+  top:309px;
+  left:0px;
+  color:  #1da0c5;
+
+}
