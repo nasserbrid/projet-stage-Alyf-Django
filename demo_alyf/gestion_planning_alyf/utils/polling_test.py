@@ -24,7 +24,7 @@ def get_http_file_metadata(url, interval=60):
 
     response = requests.head(url)
     
-    print(response.__dict__)
+  
 
     last_mod_time = response.headers.get('Last-Modified')
 

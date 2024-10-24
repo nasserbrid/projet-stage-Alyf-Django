@@ -31,6 +31,9 @@ class ExcelFile:
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
+
+        self.excel.visible = False
+        self.excel.DisplayAlerts = False
           
 
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH")):
@@ -73,6 +76,9 @@ class ExcelFile:
                              
 
     def save_formateur_worksheet(self, formateur_name):
+
+          self.excel.visible = False
+          self.excel.DisplayAlerts = False
          
           
           self.worksheet.Cells(1, 8).Value = formateur_name
@@ -114,7 +120,8 @@ class ExcelFile:
           
     #Définir une méthode qui permet d'utiliser le dataframe et qui va récupérer des sessions dans "DEV WEB"
     def create_fullYearTeachingDataFrame_from_instructorSheet(self, path = os.getenv("ALYFDEVPATH") ):
-           
+           self.excel.visible = False
+           self.excel.DisplayAlerts = False
            excel_path = path
            #print(path)
            
@@ -172,7 +179,8 @@ class ExcelFile:
     def create_modules(self, path = os.getenv("ALYFDEVPATH")):
             #cette methode permettra de recuperer toutes les infos du module
             # print("in create module")
-
+           self.excel.visible = False
+           self.excel.DisplayAlerts = False
            df  = self.create_fullYearTeachingDataFrame_from_instructorSheet(path)
            liste_de_cours = df[1].unique()
            liste_de_cours= list(filter(len, liste_de_cours))
@@ -394,6 +402,8 @@ class ExcelFile:
          return df_modules_session
     
     def create_list_cours_termines_et_futur(self, module_name, sheet_name, session_name):
+          self.excel.visible = False
+          self.excel.DisplayAlerts = False
           df = self.get_session_dataframe(sheet_name,session_name)
           df = df.fillna("")
           #print(df)
@@ -441,7 +451,7 @@ class ExcelFile:
     def retrieve_instructor_list(self, sheetName):
           
           self.excel.visible = False
-          # self.excel.DisplayAlerts = False
+          self.excel.DisplayAlerts = False
          
 
           if cache.get("master_excel_file") != None:

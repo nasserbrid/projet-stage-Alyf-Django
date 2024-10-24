@@ -180,6 +180,8 @@ def is_planning__change(instructor):
 def verifyallformateurs():
     excel = ExcelFile()
     instructors = excel.retrieve_instructor_list("FORMATEURS - MODULES")
+    #commented for test
+   
 
     formateurs_a_updater = []
 

@@ -60,7 +60,7 @@ def home(request):
         return render(request, 'home.html')
 
 @login_required
-@ never_cache
+@never_cache
 def selectformateur(request):
 
     if not is_admin(request.user):
@@ -294,7 +294,7 @@ class CalendarDetailView(LoginRequiredMixin,DetailView):
                       return  dico[key][k]  
                    
       def get(self, request, module_id): 
-            instructeur = self.request.session["current_formateur"]
+            instructeur = self.request.session.get("current_formateur", self.request.user.username)
             print('in the get method')
             print(instructeur)
             cache_key =  f'modules_{instructeur}'      

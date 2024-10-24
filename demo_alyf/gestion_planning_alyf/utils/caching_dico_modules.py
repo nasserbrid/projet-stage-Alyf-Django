@@ -34,7 +34,7 @@ def create_temp_data_for_all_instructors():
     
 
     for instructor, file in dico.items():
-        excel = ExcelFile( )
+        excel = ExcelFile()
         print(instructor.get_last_name())
         excel.open_worksheet("DEV WEB", file)
         
