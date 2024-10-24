@@ -66,4 +66,4 @@ def build_schedule_files_for_formateurs():
 
     
    
-build_schedule_files_for_formateurs()
+#build_schedule_files_for_formateurs()

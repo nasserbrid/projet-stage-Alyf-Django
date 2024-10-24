@@ -31,6 +31,7 @@ from django.views.decorators.cache import never_cache
 
 import sys
 import logging
+from django.core.exceptions import PermissionDenied
 import os
 # importing necessary functions from dotenv library
 from dotenv import load_dotenv, dotenv_values 
@@ -103,7 +104,7 @@ def telecharger_document(request, file):
                 print(f"{username} : username")
                 
                 response = HttpResponse(data, content_type='application/vnd.ms-excel.sheet.macroEnabled.12')
-                response["Content-Disposition"] = u"attachment; filename={0}".format(username)
+                response["Content-Disposition"] = u"attachment; filename={0}.xlsm".format(username)
                 return response
             # else:
             #  raise Http404      

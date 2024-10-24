@@ -10,10 +10,6 @@ import pandas as pd
 import re
 
 
-#
-
-
-
 class TestExcelFile(unittest.TestCase):
     def test_excel_com_object_creation(self):
         try:

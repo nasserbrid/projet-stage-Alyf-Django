@@ -8,6 +8,7 @@ import pandas as pd
 from datetime import date
 from datetime import datetime
 from django.core.cache import cache
+import pathlib as pl
 
 import django
 
@@ -20,7 +21,7 @@ django.setup()
 
 
 from dotenv import load_dotenv, dotenv_values 
-# loading variables from .env file
+
 load_dotenv() 
 
 
@@ -31,9 +32,8 @@ class ExcelFile:
         self.excel = win32com.client.Dispatch("Excel.Application")
         self.workbook = workbook
         self.worksheet = worksheet 
-
-        self.excel.visible = False
-        self.excel.DisplayAlerts = False
+      #   self.excel.Visible = False
+      #   self.excel.DisplayAlerts = False
           
 
     def open_worksheet(self, sheetName, path = os.getenv("ALYFMASTERPATH")):
@@ -70,9 +70,10 @@ class ExcelFile:
                    except Exception as e:
                         print('La feuille "DEV WEB" est introuvable:', e)
                         self.workbook.Close(SaveChanges=False)
-                        #self.EXCEL.Quit()
+                       
                         self.excel.Quit()
                         exit(1)
+                             
                              
 
     def save_formateur_worksheet(self, formateur_name):
@@ -336,6 +337,7 @@ class ExcelFile:
      
     def find_session_type(self, session_name):
             
+            
     
       keywords = {
         "Isitech - XEFI": ["isi", "ISI", "isitech", "xefi", "XEFI", "ISITECH", "XEFI"],
@@ -458,7 +460,16 @@ class ExcelFile:
                excel_path = cache.get("master_excel_file")
                self.open_worksheet(sheetName, excel_path)
           else:
+            #    path = pl.Path(os.getenv("ALYFDEVPATH"))
+               
+            #    print(path.is_file())
+               
                excel_path = os.getenv("ALYFDEVPATH")
+                
+            
+               
+                
+                
                self.open_worksheet(sheetName)
           
 
