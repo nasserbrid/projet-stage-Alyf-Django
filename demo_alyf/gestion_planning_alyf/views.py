@@ -61,7 +61,7 @@ def home(request):
         return render(request, 'home.html')
 
 @login_required
-@ never_cache
+@never_cache
 def selectformateur(request):
 
     if not is_admin(request.user):
